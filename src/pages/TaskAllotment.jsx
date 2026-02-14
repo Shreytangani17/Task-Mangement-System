@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { RefreshCw } from 'lucide-react';
 import axios from 'axios';
 import Sidebar from '../components/Sidebar';
 import SuccessToast from '../components/SuccessToast';
@@ -11,12 +12,14 @@ const TaskAllotment = () => {
   const [formData, setFormData] = useState({ taskEntry: '', task: '', assignTo: '', dueDate: '' });
   const [loading, setLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
+    setRefreshing(true);
     try {
       const token = localStorage.getItem('token');
       const [taskEntriesRes, tasksRes, employeesRes] = await Promise.all([
@@ -31,6 +34,8 @@ const TaskAllotment = () => {
       setAllotments(assigned);
     } catch (error) {
       console.error('Error:', error);
+    } finally {
+      setRefreshing(false);
     }
   };
 
@@ -80,7 +85,17 @@ const TaskAllotment = () => {
       {showToast && <SuccessToast message="Task assigned successfully!" onClose={() => setShowToast(false)} />}
       <Sidebar />
       <div className="flex-1 p-8">
-        <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Task Allotment</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Task Allotment</h1>
+          <button
+            onClick={fetchData}
+            disabled={refreshing}
+            className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 disabled:opacity-50"
+          >
+            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+            Refresh
+          </button>
+        </div>
         <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 mb-6">
           <div className="mb-4">
             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Select from Task Entry</label>

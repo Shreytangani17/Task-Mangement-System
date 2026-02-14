@@ -1,19 +1,55 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { RefreshCw } from 'lucide-react';
+import axios from 'axios';
 import Sidebar from '../components/Sidebar';
 
 const TaskDevelopment = () => {
   const [formData, setFormData] = useState({ task: '', notes: '' });
+  const [tasks, setTasks] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    setRefreshing(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:5000/api/tasks', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setTasks(response.data);
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-black">
       <Sidebar />
       <div className="flex-1 p-8">
-        <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Task Development</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Task Development</h1>
+          <button
+            onClick={fetchTasks}
+            disabled={refreshing}
+            className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 disabled:opacity-50"
+          >
+            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+            Refresh
+          </button>
+        </div>
         <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 mb-6">
           <div className="mb-4">
             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Task</label>
             <select className="w-full px-3 py-2 border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg" value={formData.task} onChange={(e) => setFormData({...formData, task: e.target.value})}>
-              <option>-- Select Task --</option>
+              <option value="">-- Select Task --</option>
+              {tasks.map(task => (
+                <option key={task._id} value={task._id}>{task.title} ({task.status})</option>
+              ))}
             </select>
           </div>
           <div className="mb-4">
