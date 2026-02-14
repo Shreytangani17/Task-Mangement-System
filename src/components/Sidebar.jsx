@@ -40,7 +40,7 @@ const Sidebar = () => {
   const links = user?.role === 'admin' ? adminLinks : employeeLinks;
 
   return (
-    <div className="bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 w-64 min-h-screen p-4 flex flex-col">
+    <div className="bg-white dark:bg-black border-r border-gray-200 dark:border-gray-800 w-64 min-h-screen p-4 flex flex-col">
       <div className="mb-6 p-3">
         <h1 className="text-xl font-bold text-purple-600 dark:text-purple-400">TaskFlow</h1>
         <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{user?.role === 'admin' ? 'Admin Panel' : 'Employee Panel'}</p>

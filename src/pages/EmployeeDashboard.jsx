@@ -54,7 +54,7 @@ const EmployeeDashboard = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-white dark:bg-gray-900">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-black">
       <Sidebar />
       <div className="flex-1 p-6">
         <div className="max-w-6xl mx-auto">
@@ -68,32 +68,34 @@ const EmployeeDashboard = () => {
             <div className="relative">
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="relative bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700 transition"
+                className="relative bg-black text-white p-3 rounded-lg hover:bg-gray-800 transition shadow-md"
               >
                 <Bell className="w-5 h-5" />
                 {notifications.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold animate-pulse">
                     {notifications.length}
                   </span>
                 )}
               </button>
               {showNotifications && (
-                <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
-                  <div className="p-3 border-b border-gray-200 dark:border-gray-700">
-                    <h3 className="font-semibold text-gray-900 dark:text-white">Notifications</h3>
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setShowNotifications(false)}></div>
+                  <div className="absolute right-0 mt-2 w-96 bg-white rounded-xl shadow-2xl border-2 border-black z-50 overflow-hidden">
+                  <div className="bg-black text-white p-4">
+                    <h3 className="font-bold text-lg">Notifications</h3>
                   </div>
                   <div className="max-h-96 overflow-y-auto">
                     {notifications.length === 0 ? (
-                      <p className="p-4 text-sm text-gray-600 dark:text-gray-400">No new notifications</p>
+                      <p className="p-6 text-center text-gray-500">No new notifications</p>
                     ) : (
                       notifications.map((notif) => (
-                        <div key={notif._id} className="p-3 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
-                          <p className="text-sm text-gray-900 dark:text-white">{notif.message}</p>
-                          <div className="flex justify-between items-center mt-2">
+                        <div key={notif._id} className="p-4 border-b border-gray-200 hover:bg-gray-50 transition">
+                          <p className="text-sm text-gray-900 font-medium mb-2">{notif.message}</p>
+                          <div className="flex justify-between items-center">
                             <p className="text-xs text-gray-500">{new Date(notif.createdAt).toLocaleString()}</p>
                             <button
                               onClick={() => markAsRead(notif._id)}
-                              className="text-xs text-purple-600 hover:text-purple-700"
+                              className="text-xs bg-black text-white px-3 py-1 rounded-full hover:bg-gray-800 transition font-medium"
                             >
                               Mark as read
                             </button>
@@ -103,48 +105,49 @@ const EmployeeDashboard = () => {
                     )}
                   </div>
                 </div>
+                </>
               )}
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-purple-50 dark:bg-purple-900 rounded-lg p-4 border border-purple-200 dark:border-purple-700">
+            <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-4 shadow-lg">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-purple-600 dark:text-purple-300 font-medium">Total Tasks</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.total}</p>
+                  <p className="text-xs text-purple-100 font-medium">Total Tasks</p>
+                  <p className="text-2xl font-bold text-white mt-1">{stats.total}</p>
                 </div>
-                <ListTodo className="w-8 h-8 text-purple-600 dark:text-purple-400" />
+                <ListTodo className="w-8 h-8 text-white opacity-80" />
               </div>
             </div>
 
-            <div className="bg-yellow-50 dark:bg-yellow-900 rounded-lg p-4 border border-yellow-200 dark:border-yellow-700">
+            <div className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg p-4 shadow-lg">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-yellow-600 dark:text-yellow-300 font-medium">Pending</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.pending}</p>
+                  <p className="text-xs text-pink-100 font-medium">Pending</p>
+                  <p className="text-2xl font-bold text-white mt-1">{stats.pending}</p>
                 </div>
-                <Clock className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
+                <Clock className="w-8 h-8 text-white opacity-80" />
               </div>
             </div>
 
-            <div className="bg-green-50 dark:bg-green-900 rounded-lg p-4 border border-green-200 dark:border-green-700">
+            <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg p-4 shadow-lg">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-green-600 dark:text-green-300 font-medium">Completed</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.completed}</p>
+                  <p className="text-xs text-cyan-100 font-medium">Completed</p>
+                  <p className="text-2xl font-bold text-white mt-1">{stats.completed}</p>
                 </div>
-                <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
+                <CheckCircle className="w-8 h-8 text-white opacity-80" />
               </div>
             </div>
 
-            <div className="bg-red-50 dark:bg-red-900 rounded-lg p-4 border border-red-200 dark:border-red-700">
+            <div className="bg-gradient-to-br from-rose-500 to-rose-600 rounded-lg p-4 shadow-lg">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-red-600 dark:text-red-300 font-medium">Overdue</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.overdue}</p>
+                  <p className="text-xs text-rose-100 font-medium">Overdue</p>
+                  <p className="text-2xl font-bold text-white mt-1">{stats.overdue}</p>
                 </div>
-                <AlertCircle className="w-8 h-8 text-red-600 dark:text-red-400" />
+                <AlertCircle className="w-8 h-8 text-white opacity-80" />
               </div>
             </div>
           </div>

@@ -25,7 +25,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const COLORS = ['#9333ea', '#f59e0b', '#10b981', '#ef4444'];
+  const COLORS = ['#a855f7', '#ec4899', '#06b6d4', '#f43f5e'];
 
   const pieData = stats ? [
     { name: 'Pending', value: stats.pending },
@@ -35,7 +35,7 @@ const AdminDashboard = () => {
   ] : [];
 
   return (
-    <div className="flex min-h-screen bg-white dark:bg-gray-900">
+    <div className="flex min-h-screen bg-white dark:bg-black">
       <Sidebar />
       <div className="flex-1 p-6">
         <div className="max-w-6xl mx-auto">
@@ -44,43 +44,43 @@ const AdminDashboard = () => {
           {stats && (
             <>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-purple-50 dark:bg-purple-900 rounded-lg p-4 border border-purple-200 dark:border-purple-700">
+                <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-4 shadow-lg">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs text-purple-600 dark:text-purple-300 font-medium">Total Tasks</p>
-                      <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.total}</p>
+                      <p className="text-xs text-purple-100 font-medium">Total Tasks</p>
+                      <p className="text-2xl font-bold text-white mt-1">{stats.total}</p>
                     </div>
-                    <ListTodo className="w-8 h-8 text-purple-600 dark:text-purple-400" />
+                    <ListTodo className="w-8 h-8 text-white opacity-80" />
                   </div>
                 </div>
 
-                <div className="bg-yellow-50 dark:bg-yellow-900 rounded-lg p-4 border border-yellow-200 dark:border-yellow-700">
+                <div className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg p-4 shadow-lg">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs text-yellow-600 dark:text-yellow-300 font-medium">Pending</p>
-                      <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.pending}</p>
+                      <p className="text-xs text-pink-100 font-medium">Pending</p>
+                      <p className="text-2xl font-bold text-white mt-1">{stats.pending}</p>
                     </div>
-                    <Clock className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
+                    <Clock className="w-8 h-8 text-white opacity-80" />
                   </div>
                 </div>
 
-                <div className="bg-green-50 dark:bg-green-900 rounded-lg p-4 border border-green-200 dark:border-green-700">
+                <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg p-4 shadow-lg">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs text-green-600 dark:text-green-300 font-medium">Completed</p>
-                      <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.completed}</p>
+                      <p className="text-xs text-cyan-100 font-medium">Completed</p>
+                      <p className="text-2xl font-bold text-white mt-1">{stats.completed}</p>
                     </div>
-                    <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
+                    <CheckCircle className="w-8 h-8 text-white opacity-80" />
                   </div>
                 </div>
 
-                <div className="bg-red-50 dark:bg-red-900 rounded-lg p-4 border border-red-200 dark:border-red-700">
+                <div className="bg-gradient-to-br from-rose-500 to-rose-600 rounded-lg p-4 shadow-lg">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs text-red-600 dark:text-red-300 font-medium">Overdue</p>
-                      <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.overdue}</p>
+                      <p className="text-xs text-rose-100 font-medium">Overdue</p>
+                      <p className="text-2xl font-bold text-white mt-1">{stats.overdue}</p>
                     </div>
-                    <AlertCircle className="w-8 h-8 text-red-600 dark:text-red-400" />
+                    <AlertCircle className="w-8 h-8 text-white opacity-80" />
                   </div>
                 </div>
               </div>

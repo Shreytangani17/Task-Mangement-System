@@ -90,10 +90,10 @@ const EmployeeTasks = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar />
-      <div className="flex-1 bg-gray-50 p-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">My Tasks</h1>
+      <div className="flex-1 p-8">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">My Tasks</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-4">
@@ -103,12 +103,12 @@ const EmployeeTasks = () => {
                 <div
                   key={task._id}
                   onClick={() => fetchTaskDetails(task._id)}
-                  className={`bg-white rounded-xl shadow-sm p-6 cursor-pointer hover:shadow-md transition ${
+                  className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 cursor-pointer hover:shadow-md transition ${
                     selectedTask?._id === task._id ? 'ring-2 ring-indigo-500' : ''
                   }`}
                 >
-                  <h3 className="text-lg font-bold text-gray-800 mb-2">{task.title}</h3>
-                  <p className="text-gray-600 text-sm mb-4">{task.description}</p>
+                  <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">{task.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">{task.description}</p>
                   <div className="flex items-center space-x-3 mb-3">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(task.priority)}`}>
                       {task.priority}
@@ -117,7 +117,7 @@ const EmployeeTasks = () => {
                       {task.status}
                     </span>
                   </div>
-                  <div className="flex items-center text-gray-600 text-sm">
+                  <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm">
                     <Calendar className="w-4 h-4 mr-1" />
                     Due: {new Date(task.dueDate).toLocaleDateString()}
                     {isOverdue && <span className="ml-2 text-red-600 font-medium">Overdue!</span>}
@@ -128,16 +128,16 @@ const EmployeeTasks = () => {
           </div>
 
           {selectedTask && (
-            <div className="bg-white rounded-xl shadow-sm p-6 sticky top-8 h-fit">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">{selectedTask.title}</h2>
-              <p className="text-gray-600 mb-6">{selectedTask.description}</p>
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 sticky top-8 h-fit">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">{selectedTask.title}</h2>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">{selectedTask.description}</p>
 
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Update Status</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Update Status</label>
                 <select
                   value={selectedTask.status}
                   onChange={(e) => updateStatus(selectedTask._id, e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="Pending">Pending</option>
                   <option value="In-Progress">In Progress</option>
@@ -146,16 +146,16 @@ const EmployeeTasks = () => {
               </div>
 
               <div className="mb-6">
-                <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                <h3 className="font-semibold text-gray-800 dark:text-white mb-3 flex items-center">
                   <MessageSquare className="w-5 h-5 mr-2" />
                   Comments
                 </h3>
                 <div className="space-y-3 mb-4 max-h-48 overflow-y-auto">
                   {comments.map((comment) => (
-                    <div key={comment._id} className="bg-gray-50 rounded-lg p-3">
-                      <p className="text-sm font-medium text-gray-800">{comment.user.name}</p>
-                      <p className="text-sm text-gray-600 mt-1">{comment.text}</p>
-                      <p className="text-xs text-gray-500 mt-1">
+                    <div key={comment._id} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                      <p className="text-sm font-medium text-gray-800 dark:text-white">{comment.user.name}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{comment.text}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
                         {new Date(comment.createdAt).toLocaleString()}
                       </p>
                     </div>
@@ -167,7 +167,7 @@ const EmployeeTasks = () => {
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Add a comment..."
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"
                   />
                   <button
                     onClick={addComment}
@@ -179,15 +179,15 @@ const EmployeeTasks = () => {
               </div>
 
               <div>
-                <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                <h3 className="font-semibold text-gray-800 dark:text-white mb-3 flex items-center">
                   <Paperclip className="w-5 h-5 mr-2" />
                   Attachments
                 </h3>
                 <div className="space-y-2 mb-4">
                   {attachments.map((att) => (
-                    <div key={att._id} className="bg-gray-50 rounded-lg p-3 text-sm">
-                      <p className="font-medium text-gray-800">{att.filename}</p>
-                      <p className="text-xs text-gray-500">
+                    <div key={att._id} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 text-sm">
+                      <p className="font-medium text-gray-800 dark:text-white">{att.filename}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         Uploaded by {att.user.name} on {new Date(att.createdAt).toLocaleDateString()}
                       </p>
                     </div>
@@ -197,7 +197,7 @@ const EmployeeTasks = () => {
                   <input
                     type="file"
                     onChange={(e) => setFile(e.target.files[0])}
-                    className="flex-1 text-sm"
+                    className="flex-1 text-sm dark:text-gray-300"
                   />
                   <button
                     onClick={uploadFile}

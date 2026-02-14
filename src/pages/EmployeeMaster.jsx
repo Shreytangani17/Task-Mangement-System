@@ -90,67 +90,67 @@ const EmployeeMaster = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-black">
       {showToast && <SuccessToast message={toastMessage} onClose={() => setShowToast(false)} />}
       {showConfirm && <ConfirmModal message="Delete this employee?" onConfirm={confirmDelete} onCancel={() => setShowConfirm(false)} />}
       <Sidebar />
       <div className="flex-1 p-8">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">Employee Master</h1>
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Employee Master</h1>
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 mb-6">
           <div className="mb-4">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Name</label>
-            <input type="text" placeholder="Employee name" className="w-full px-3 py-2 border rounded-lg" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Name</label>
+            <input type="text" placeholder="Employee name" className="w-full px-3 py-2 border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-            <input type="email" placeholder="Email address" className="w-full px-3 py-2 border rounded-lg" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Email</label>
+            <input type="email" placeholder="Email address" className="w-full px-3 py-2 border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
-            <input type="tel" placeholder="Phone number" className="w-full px-3 py-2 border rounded-lg" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Phone</label>
+            <input type="tel" placeholder="Phone number" className="w-full px-3 py-2 border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Department</label>
-            <input type="text" placeholder="Department" className="w-full px-3 py-2 border rounded-lg" value={formData.department} onChange={(e) => setFormData({...formData, department: e.target.value})} />
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Department</label>
+            <input type="text" placeholder="Department" className="w-full px-3 py-2 border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg" value={formData.department} onChange={(e) => setFormData({...formData, department: e.target.value})} />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Designation</label>
-            <input type="text" placeholder="Designation" className="w-full px-3 py-2 border rounded-lg" value={formData.designation} onChange={(e) => setFormData({...formData, designation: e.target.value})} />
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Designation</label>
+            <input type="text" placeholder="Designation" className="w-full px-3 py-2 border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg" value={formData.designation} onChange={(e) => setFormData({...formData, designation: e.target.value})} />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Joining Date</label>
-            <input type="date" className="w-full px-3 py-2 border rounded-lg" value={formData.joiningDate} onChange={(e) => setFormData({...formData, joiningDate: e.target.value})} />
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Joining Date</label>
+            <input type="date" className="w-full px-3 py-2 border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg" value={formData.joiningDate} onChange={(e) => setFormData({...formData, joiningDate: e.target.value})} />
           </div>
           <div className="flex gap-3">
             <button onClick={handleSave} className="bg-cyan-500 text-white px-6 py-2 rounded-lg hover:bg-cyan-600">Save Employee</button>
-            <button onClick={handleClear} className="bg-white border px-6 py-2 rounded-lg hover:bg-gray-50">Clear</button>
+            <button onClick={handleClear} className="bg-white dark:bg-gray-800 border dark:border-gray-700 dark:text-white px-6 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">Clear</button>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6">
           <div className="flex gap-3 mb-4">
-            <input type="text" placeholder="Search employees..." className="px-3 py-2 border rounded" />
-            <button onClick={exportCSV} className="px-4 py-2 border rounded hover:bg-gray-50">Export CSV</button>
-            <button onClick={exportPDF} className="px-4 py-2 border rounded hover:bg-gray-50">Export PDF</button>
+            <input type="text" placeholder="Search employees..." className="px-3 py-2 border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded" />
+            <button onClick={exportCSV} className="px-4 py-2 border dark:border-gray-700 dark:text-white rounded hover:bg-gray-50 dark:hover:bg-gray-800">Export CSV</button>
+            <button onClick={exportPDF} className="px-4 py-2 border dark:border-gray-700 dark:text-white rounded hover:bg-gray-50 dark:hover:bg-gray-800">Export PDF</button>
           </div>
           <table className="w-full">
             <thead>
-              <tr className="border-b">
-                <th className="text-left py-3 font-semibold">Name</th>
-                <th className="text-left py-3 font-semibold">Email</th>
-                <th className="text-left py-3 font-semibold">Department</th>
-                <th className="text-left py-3 font-semibold">Designation</th>
-                <th className="text-left py-3 font-semibold">Action</th>
+              <tr className="border-b dark:border-gray-700">
+                <th className="text-left py-3 font-semibold dark:text-gray-300">Name</th>
+                <th className="text-left py-3 font-semibold dark:text-gray-300">Email</th>
+                <th className="text-left py-3 font-semibold dark:text-gray-300">Department</th>
+                <th className="text-left py-3 font-semibold dark:text-gray-300">Designation</th>
+                <th className="text-left py-3 font-semibold dark:text-gray-300">Action</th>
               </tr>
             </thead>
             <tbody>
               {employees.map(emp => (
-                <tr key={emp._id} className="border-b">
-                  <td className="py-3">{emp.name}</td>
-                  <td className="py-3">{emp.email}</td>
-                  <td className="py-3">{emp.department}</td>
-                  <td className="py-3">{emp.designation}</td>
+                <tr key={emp._id} className="border-b dark:border-gray-800">
+                  <td className="py-3 dark:text-gray-300">{emp.name}</td>
+                  <td className="py-3 dark:text-gray-300">{emp.email}</td>
+                  <td className="py-3 dark:text-gray-300">{emp.department}</td>
+                  <td className="py-3 dark:text-gray-300">{emp.designation}</td>
                   <td className="py-3">
-                    <button onClick={() => handleDelete(emp._id)} className="text-red-600 hover:text-red-800">Delete</button>
+                    <button onClick={() => handleDelete(emp._id)} className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">Delete</button>
                   </td>
                 </tr>
               ))}
