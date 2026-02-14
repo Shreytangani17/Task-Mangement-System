@@ -38,11 +38,13 @@ const EmployeeTasks = () => {
   const updateStatus = async (taskId, status) => {
     try {
       await API.patch(`/tasks/${taskId}/status`, { status });
+      alert('Status updated successfully!');
       fetchTasks();
       if (selectedTask?._id === taskId) {
         fetchTaskDetails(taskId);
       }
     } catch (error) {
+      alert('Error updating status');
       console.error('Error updating status:', error);
     }
   };
@@ -52,8 +54,10 @@ const EmployeeTasks = () => {
     try {
       await API.post(`/comments/${selectedTask._id}`, { text: newComment });
       setNewComment('');
+      alert('Comment added successfully!');
       fetchTaskDetails(selectedTask._id);
     } catch (error) {
+      alert('Error adding comment');
       console.error('Error adding comment:', error);
     }
   };
@@ -67,8 +71,10 @@ const EmployeeTasks = () => {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setFile(null);
+      alert('File uploaded successfully!');
       fetchTaskDetails(selectedTask._id);
     } catch (error) {
+      alert('Error uploading file');
       console.error('Error uploading file:', error);
     }
   };

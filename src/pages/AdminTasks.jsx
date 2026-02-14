@@ -44,11 +44,13 @@ const AdminTasks = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await API.post('/tasks', formData);
+      const response = await API.post('/tasks', formData);
+      alert(`Task "${formData.title}" created successfully!`);
       setShowModal(false);
       setFormData({ title: '', description: '', priority: 'Medium', dueDate: '', assignedTo: '' });
       fetchTasks();
     } catch (error) {
+      alert(error.response?.data?.error || 'Error creating task');
       console.error('Error creating task:', error);
     }
   };
@@ -67,8 +69,10 @@ const AdminTasks = () => {
   const handleStatusChange = async (taskId, newStatus) => {
     try {
       await API.patch(`/tasks/${taskId}/status`, { status: newStatus });
+      alert('Task status updated successfully!');
       fetchTasks();
     } catch (error) {
+      alert('Error updating status');
       console.error('Error updating status:', error);
     }
   };
@@ -76,10 +80,12 @@ const AdminTasks = () => {
   const handleAssignTask = async (employeeId) => {
     try {
       await API.patch(`/tasks/${selectedTaskForAssign}/assign`, { assignedTo: employeeId });
+      alert('Task assigned successfully! Employee will receive a notification.');
       setShowAssignModal(false);
       setSelectedTaskForAssign(null);
       fetchTasks();
     } catch (error) {
+      alert('Error assigning task');
       console.error('Error assigning task:', error);
     }
   };

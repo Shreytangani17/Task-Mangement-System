@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { ThemeContext } from '../context/ThemeContext';
-import { LayoutDashboard, ListTodo, Users, BarChart3, LogOut, CheckSquare, Moon, Sun, Settings } from 'lucide-react';
+import { LayoutDashboard, ListTodo, Users, BarChart3, LogOut, CheckSquare, Moon, Sun, Settings, Package, FileText, UserCheck, Wrench, PackageOpen, PackageCheck, StickyNote, FolderOpen, CreditCard, UserPlus, Calendar, UserCog } from 'lucide-react';
 
 const Sidebar = () => {
   const { user, logout } = useContext(AuthContext);
@@ -17,9 +17,17 @@ const Sidebar = () => {
 
   const adminLinks = [
     { path: '/admin', icon: LayoutDashboard, label: 'Dashboard' },
-    { path: '/admin/tasks', icon: ListTodo, label: 'Tasks' },
-    { path: '/admin/users', icon: Users, label: 'Users' },
-    { path: '/admin/reports', icon: BarChart3, label: 'Reports' },
+    { path: '/admin/task-entry', icon: FileText, label: 'Task Entry' },
+    { path: '/admin/task-allotment', icon: UserCheck, label: 'Task Allotment' },
+    { path: '/admin/task-development', icon: Wrench, label: 'Task Development' },
+    { path: '/admin/courier-inward', icon: PackageOpen, label: 'Courier Inward' },
+    { path: '/admin/courier-outward', icon: PackageCheck, label: 'Courier Outward' },
+    { path: '/admin/notes', icon: StickyNote, label: 'Notes' },
+    { path: '/admin/client-documents', icon: FolderOpen, label: 'Client Documents' },
+    { path: '/admin/cheque-payments', icon: CreditCard, label: 'Cheque Payments' },
+    { path: '/admin/visitor-entry', icon: UserPlus, label: 'Visitor Entry' },
+    { path: '/admin/employee-leaves', icon: Calendar, label: 'Employee Leaves' },
+    { path: '/admin/employee-master', icon: UserCog, label: 'Employee Master' },
     { path: '/admin/settings', icon: Settings, label: 'Settings' }
   ];
 

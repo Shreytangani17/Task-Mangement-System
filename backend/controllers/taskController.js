@@ -2,6 +2,8 @@ const Task = require('../models/Task');
 const Notification = require('../models/Notification');
 const Comment = require('../models/Comment');
 const Attachment = require('../models/Attachment');
+const User = require('../models/User');
+const { sendTaskAssignmentEmail } = require('../utils/emailService');
 
 exports.createTask = async (req, res) => {
   try {
@@ -27,6 +29,11 @@ exports.createTask = async (req, res) => {
         type: 'assignment',
         message: `New task assigned: ${title}`
       }).save();
+      
+      const employee = await User.findById(assignedTo);
+      if (employee) {
+        sendTaskAssignmentEmail(employee.email, employee.name, title, description, dueDate);
+      }
     }
     
     res.status(201).json(task);
@@ -85,7 +92,7 @@ exports.updateTaskStatus = async (req, res) => {
 
 exports.assignTask = async (req, res) => {
   try {
-    const { assignedTo } = req.body;
+    const { assignedTo, dueDate } = req.body;
     const task = await Task.findById(req.params.id);
     
     if (!task) {
@@ -93,6 +100,7 @@ exports.assignTask = async (req, res) => {
     }
     
     task.assignedTo = assignedTo;
+    if (dueDate) task.dueDate = dueDate;
     task.updatedAt = Date.now();
     
     await task.save();
@@ -104,6 +112,11 @@ exports.assignTask = async (req, res) => {
       type: 'assignment',
       message: `New task assigned: ${task.title}`
     }).save();
+    
+    const employee = await User.findById(assignedTo);
+    if (employee) {
+      sendTaskAssignmentEmail(employee.email, employee.name, task.title, task.description, task.dueDate);
+    }
     
     res.json(task);
   } catch (error) {
@@ -149,6 +162,7 @@ exports.getTaskStats = async (req, res) => {
       dueDate: { $lt: new Date() }
     });
     
+    console.log('Task Stats:', { total, pending, inProgress, completed, overdue });
     res.json({ total, pending, inProgress, completed, overdue });
   } catch (error) {
     res.status(500).json({ error: error.message });

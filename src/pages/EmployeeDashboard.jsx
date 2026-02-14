@@ -2,16 +2,37 @@ import { useState, useEffect, useContext } from 'react';
 import API from '../utils/api';
 import Sidebar from '../components/Sidebar';
 import { AuthContext } from '../context/AuthContext';
-import { ListTodo, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { ListTodo, Clock, CheckCircle, AlertCircle, Bell } from 'lucide-react';
 
 const EmployeeDashboard = () => {
   const { user } = useContext(AuthContext);
   const [tasks, setTasks] = useState([]);
   const [stats, setStats] = useState({ total: 0, pending: 0, inProgress: 0, completed: 0, overdue: 0 });
+  const [notifications, setNotifications] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   useEffect(() => {
     fetchTasks();
+    fetchNotifications();
   }, []);
+
+  const fetchNotifications = async () => {
+    try {
+      const { data } = await API.get('/notifications');
+      setNotifications(data.filter(n => !n.read).slice(0, 5));
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
+
+  const markAsRead = async (id) => {
+    try {
+      await API.patch(`/notifications/${id}/read`);
+      fetchNotifications();
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
+  };
 
   const fetchTasks = async () => {
     try {
@@ -37,11 +58,53 @@ const EmployeeDashboard = () => {
       <Sidebar />
       <div className="flex-1 p-6">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-              Welcome, {user?.name}!
-            </h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Here's your task overview</p>
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+                Welcome, {user?.name}!
+              </h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Here's your task overview</p>
+            </div>
+            <div className="relative">
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="relative bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700 transition"
+              >
+                <Bell className="w-5 h-5" />
+                {notifications.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {notifications.length}
+                  </span>
+                )}
+              </button>
+              {showNotifications && (
+                <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+                  <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+                    <h3 className="font-semibold text-gray-900 dark:text-white">Notifications</h3>
+                  </div>
+                  <div className="max-h-96 overflow-y-auto">
+                    {notifications.length === 0 ? (
+                      <p className="p-4 text-sm text-gray-600 dark:text-gray-400">No new notifications</p>
+                    ) : (
+                      notifications.map((notif) => (
+                        <div key={notif._id} className="p-3 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                          <p className="text-sm text-gray-900 dark:text-white">{notif.message}</p>
+                          <div className="flex justify-between items-center mt-2">
+                            <p className="text-xs text-gray-500">{new Date(notif.createdAt).toLocaleString()}</p>
+                            <button
+                              onClick={() => markAsRead(notif._id)}
+                              className="text-xs text-purple-600 hover:text-purple-700"
+                            >
+                              Mark as read
+                            </button>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">

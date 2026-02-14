@@ -49,11 +49,13 @@ const AdminUsers = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await API.post('/users', formData);
+      const response = await API.post('/users', formData);
+      alert(`User ${formData.name} created successfully!`);
       setShowModal(false);
       setFormData({ name: '', email: '', password: '', role: 'employee' });
       fetchUsers();
     } catch (error) {
+      alert(error.response?.data?.error || 'Error creating user');
       console.error('Error creating user:', error);
     }
   };

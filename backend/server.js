@@ -10,6 +10,10 @@ const taskRoutes = require('./routes/tasks');
 const commentRoutes = require('./routes/comments');
 const attachmentRoutes = require('./routes/attachments');
 const notificationRoutes = require('./routes/notifications');
+const courierRoutes = require('./routes/courier');
+const taskEntryRoutes = require('./routes/taskEntries');
+const noteRoutes = require('./routes/notes');
+const employeeMasterRoutes = require('./routes/employeeMaster');
 
 const app = express();
 
@@ -28,6 +32,10 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/attachments', attachmentRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/couriers', courierRoutes);
+app.use('/api/task-entries', taskEntryRoutes);
+app.use('/api/notes', noteRoutes);
+app.use('/api/employee-master', employeeMasterRoutes);
 
 // MongoDB Connection
 // MongoDB Connection

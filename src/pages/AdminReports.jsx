@@ -20,6 +20,10 @@ const AdminReports = () => {
   };
 
   const downloadCSV = () => {
+    if (employeeStats.length === 0) {
+      alert('No data to export');
+      return;
+    }
     const headers = ['Employee Name', 'Email', 'Total Tasks', 'Completed', 'Pending', 'In Progress'];
     const rows = employeeStats.map(emp => [
       emp.name,
@@ -39,8 +43,12 @@ const AdminReports = () => {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'employee-report.csv';
+    a.download = `employee-report-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    alert('CSV downloaded successfully!');
   };
 
   return (
