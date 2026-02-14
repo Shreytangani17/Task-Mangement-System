@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { RefreshCw } from 'lucide-react';
-import axios from 'axios';
+import API from '../utils/api';
 import Sidebar from '../components/Sidebar';
 
 const TaskDevelopment = () => {
@@ -15,13 +15,12 @@ const TaskDevelopment = () => {
   const fetchTasks = async () => {
     setRefreshing(true);
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/tasks', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await API.get('/tasks');
+      console.log('Tasks loaded:', response.data);
       setTasks(response.data);
     } catch (error) {
       console.error('Error fetching tasks:', error);
+      alert('Error loading tasks. Please check console.');
     } finally {
       setRefreshing(false);
     }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { RefreshCw } from 'lucide-react';
-import axios from 'axios';
+import API from '../utils/api';
 import Sidebar from '../components/Sidebar';
 import SuccessToast from '../components/SuccessToast';
 
@@ -21,19 +21,24 @@ const TaskAllotment = () => {
   const fetchData = async () => {
     setRefreshing(true);
     try {
-      const token = localStorage.getItem('token');
       const [taskEntriesRes, tasksRes, employeesRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/task-entries', { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get('http://localhost:5000/api/tasks', { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get('http://localhost:5000/api/users/employees', { headers: { Authorization: `Bearer ${token}` } })
+        API.get('/task-entries'),
+        API.get('/tasks'),
+        API.get('/users/employees')
       ]);
+      
+      console.log('Task Entries:', taskEntriesRes.data);
+      console.log('Tasks:', tasksRes.data);
+      console.log('Employees:', employeesRes.data);
+      
       setTaskEntries(taskEntriesRes.data);
       setTasks(tasksRes.data);
       setEmployees(employeesRes.data);
       const assigned = tasksRes.data.filter(t => t.assignedTo && t.assignedTo._id);
       setAllotments(assigned);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error fetching data:', error);
+      alert('Error loading data. Please check console for details.');
     } finally {
       setRefreshing(false);
     }
@@ -46,8 +51,6 @@ const TaskAllotment = () => {
     
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      
       // If TaskEntry selected, create Task first
       if (formData.taskEntry) {
         const entry = taskEntries.find(t => t._id === formData.taskEntry);
@@ -58,14 +61,13 @@ const TaskAllotment = () => {
           dueDate: formData.dueDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
           assignedTo: formData.assignTo
         };
-        await axios.post('http://localhost:5000/api/tasks', taskData, { headers: { Authorization: `Bearer ${token}` } });
+        await API.post('/tasks', taskData);
       } else {
         // Assign existing Task
-        await axios.patch(
-          `http://localhost:5000/api/tasks/${formData.task}/assign`,
-          { assignedTo: formData.assignTo, dueDate: formData.dueDate },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        await API.patch(`/tasks/${formData.task}/assign`, {
+          assignedTo: formData.assignTo,
+          dueDate: formData.dueDate
+        });
       }
       
       setShowToast(true);
