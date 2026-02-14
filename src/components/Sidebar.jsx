@@ -25,8 +25,6 @@ const Sidebar = () => {
     { path: '/admin/notes', icon: StickyNote, label: 'Notes' },
     { path: '/admin/client-documents', icon: FolderOpen, label: 'Client Documents' },
     { path: '/admin/cheque-payments', icon: CreditCard, label: 'Cheque Payments' },
-    { path: '/admin/visitor-entry', icon: UserPlus, label: 'Visitor Entry' },
-    { path: '/admin/employee-leaves', icon: Calendar, label: 'Employee Leaves' },
     { path: '/admin/employee-master', icon: UserCog, label: 'Employee Master' },
     { path: '/admin/settings', icon: Settings, label: 'Settings' }
   ];
@@ -40,13 +38,14 @@ const Sidebar = () => {
   const links = user?.role === 'admin' ? adminLinks : employeeLinks;
 
   return (
-    <div className="bg-white dark:bg-black border-r border-gray-200 dark:border-gray-800 w-64 min-h-screen p-4 flex flex-col">
+    <div className="bg-white dark:bg-black border-r border-gray-200 dark:border-gray-800 w-64 lg:w-64 md:w-20 min-h-screen p-4 flex flex-col">
       <div className="mb-6 p-3">
-        <h1 className="text-xl font-bold text-purple-600 dark:text-purple-400">TaskFlow</h1>
-        <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{user?.role === 'admin' ? 'Admin Panel' : 'Employee Panel'}</p>
+        <h1 className="text-xl font-bold text-purple-600 dark:text-purple-400 md:hidden lg:block">TaskFlow</h1>
+        <h1 className="text-xl font-bold text-purple-600 dark:text-purple-400 hidden md:block lg:hidden">TF</h1>
+        <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 md:hidden lg:block">{user?.role === 'admin' ? 'Admin Panel' : 'Employee Panel'}</p>
       </div>
 
-      <nav className="flex-1 space-y-1">
+      <nav className="flex-1 space-y-1 overflow-y-auto">
         {links.map((link) => {
           const Icon = link.icon;
           const isActive = location.pathname === link.path;
@@ -59,9 +58,10 @@ const Sidebar = () => {
                   ? 'bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 font-medium' 
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
               }`}
+              title={link.label}
             >
-              <Icon className="w-4 h-4" />
-              <span>{link.label}</span>
+              <Icon className="w-4 h-4 flex-shrink-0" />
+              <span className="truncate md:hidden lg:block">{link.label}</span>
             </Link>
           );
         })}
@@ -71,22 +71,24 @@ const Sidebar = () => {
         <button
           onClick={toggleTheme}
           className="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition w-full"
+          title={theme === 'light' ? 'Dark Mode' : 'Light Mode'}
         >
           {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-          <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+          <span className="md:hidden lg:block">{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
         </button>
         
-        <div className="px-3 py-2">
+        <div className="px-3 py-2 md:hidden lg:block">
           <p className="text-xs text-gray-500 dark:text-gray-400">Logged in as</p>
-          <p className="text-sm font-medium text-gray-800 dark:text-gray-200">{user?.name}</p>
+          <p className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">{user?.name}</p>
         </div>
         
         <button
           onClick={handleLogout}
           className="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900 hover:text-red-600 dark:hover:text-red-400 transition w-full"
+          title="Logout"
         >
           <LogOut className="w-4 h-4" />
-          <span>Logout</span>
+          <span className="md:hidden lg:block">Logout</span>
         </button>
       </div>
     </div>

@@ -53,8 +53,6 @@ function App() {
             <Route path="/admin/notes" element={<PrivateRoute role="admin"><Notes /></PrivateRoute>} />
             <Route path="/admin/client-documents" element={<PrivateRoute role="admin"><ClientDocuments /></PrivateRoute>} />
             <Route path="/admin/cheque-payments" element={<PrivateRoute role="admin"><ChequePayments /></PrivateRoute>} />
-            <Route path="/admin/visitor-entry" element={<PrivateRoute role="admin"><VisitorEntry /></PrivateRoute>} />
-            <Route path="/admin/employee-leaves" element={<PrivateRoute role="admin"><EmployeeLeaves /></PrivateRoute>} />
             <Route path="/admin/employee-master" element={<PrivateRoute role="admin"><EmployeeMaster /></PrivateRoute>} />
             <Route path="/admin/tasks" element={<PrivateRoute role="admin"><AdminTasks /></PrivateRoute>} />
             <Route path="/admin/users" element={<PrivateRoute role="admin"><AdminUsers /></PrivateRoute>} />
