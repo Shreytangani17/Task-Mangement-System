@@ -91,7 +91,8 @@ const TaskEntry = () => {
       {showToast && <SuccessToast message="Task saved successfully!" onClose={() => setShowToast(false)} />}
       {showConfirm && <ConfirmModal message="Delete this task?" onConfirm={confirmDelete} onCancel={() => setShowConfirm(false)} />}
       <Sidebar />
-      <div className="flex-1 p-4 md:p-8 overflow-x-hidden">
+      <div className="flex-1 p-4 md:p-8 overflow-x-hidden lg:ml-0">
+        <div className="pt-16 lg:pt-0">
         <h1 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white mb-4 md:mb-6">Task Entry</h1>
         <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4 md:p-6 mb-4 md:mb-6">
           <div className="mb-4">
@@ -167,6 +168,7 @@ const TaskEntry = () => {
             </tbody>
           </table>
           </div>
+        </div>
         </div>
       </div>
     </div>

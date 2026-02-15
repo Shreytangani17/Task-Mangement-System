@@ -32,8 +32,8 @@ const AdminDashboard = () => {
   return (
     <div className="flex min-h-screen bg-white dark:bg-black">
       <Sidebar />
-      <div className="flex-1 p-4 md:p-6 overflow-x-hidden">
-        <div className="max-w-6xl mx-auto">
+      <div className="flex-1 p-4 md:p-6 overflow-x-hidden lg:ml-0">
+        <div className="max-w-6xl mx-auto pt-16 lg:pt-0">
           <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6">Dashboard Overview</h1>
 
           {stats && (
