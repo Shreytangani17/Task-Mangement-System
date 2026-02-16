@@ -10,6 +10,11 @@ const transporter = nodemailer.createTransport({
 
 const sendTaskAssignmentEmail = async (employeeEmail, employeeName, taskTitle, taskDescription, dueDate) => {
   try {
+    console.log('=== EMAIL SENDING ===');
+    console.log('To:', employeeEmail);
+    console.log('Name:', employeeName);
+    console.log('Task:', taskTitle);
+    
     const mailOptions = {
       from: process.env.EMAIL_USER || 'Task Management System',
       to: employeeEmail,
@@ -26,10 +31,14 @@ const sendTaskAssignmentEmail = async (employeeEmail, employeeName, taskTitle, t
       `
     };
     
-    await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully to:', employeeEmail);
+    const info = await transporter.sendMail(mailOptions);
+    console.log('✅ Email sent successfully to:', employeeEmail);
+    console.log('Message ID:', info.messageId);
+    return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error('Error sending email:', error.message);
+    console.error('❌ Error sending email to:', employeeEmail);
+    console.error('Error details:', error.message);
+    return { success: false, error: error.message };
   }
 };
 

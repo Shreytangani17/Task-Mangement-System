@@ -32,12 +32,15 @@ exports.createTask = async (req, res) => {
       
       const employee = await User.findById(assignedTo);
       if (employee) {
-        sendTaskAssignmentEmail(employee.email, employee.name, title, description, dueDate);
+        console.log(`Sending email to: ${employee.email} (${employee.name})`);
+        await sendTaskAssignmentEmail(employee.email, employee.name, title, description, dueDate);
+        console.log(`Email sent successfully to: ${employee.email}`);
       }
     }
     
     res.status(201).json(task);
   } catch (error) {
+    console.error('Error in createTask:', error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -115,11 +118,16 @@ exports.assignTask = async (req, res) => {
     
     const employee = await User.findById(assignedTo);
     if (employee) {
-      sendTaskAssignmentEmail(employee.email, employee.name, task.title, task.description, task.dueDate);
+      console.log(`Sending email to: ${employee.email} (${employee.name})`);
+      await sendTaskAssignmentEmail(employee.email, employee.name, task.title, task.description, task.dueDate);
+      console.log(`Email sent successfully to: ${employee.email}`);
+    } else {
+      console.log('Employee not found for email notification');
     }
     
     res.json(task);
   } catch (error) {
+    console.error('Error in assignTask:', error);
     res.status(500).json({ error: error.message });
   }
 };
