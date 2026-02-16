@@ -9,7 +9,7 @@ const TaskAllotment = () => {
   const [tasks, setTasks] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [allotments, setAllotments] = useState([]);
-  const [formData, setFormData] = useState({ assignTo: '', dueDate: '' });
+  const [formData, setFormData] = useState({ taskId: '', assignTo: '', dueDate: '' });
   const [loading, setLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -34,8 +34,9 @@ const TaskAllotment = () => {
       setTaskEntries(taskEntriesRes.data);
       setTasks(tasksRes.data);
       setEmployees(employeesRes.data);
-      const assigned = tasksRes.data.filter(t => t.assignedTo && t.assignedTo._id);
+      const assigned = tasksRes.data.filter(t => t.assignedTo);
       setAllotments(assigned);
+      console.log('Assigned Tasks:', assigned);
     } catch (error) {
       console.error('Error fetching data:', error);
       alert('Error loading data. Please check console for details.');
@@ -46,21 +47,32 @@ const TaskAllotment = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.taskId) return alert('Please select a task');
     if (!formData.assignTo) return alert('Please select employee');
     
     setLoading(true);
     try {
+      const response = await API.patch(`/tasks/${formData.taskId}/assign`, {
+        assignedTo: formData.assignTo,
+        dueDate: formData.dueDate || undefined
+      });
+      
+      console.log('Assignment Response:', response.data);
+      
       setShowToast(true);
-      setFormData({ assignTo: '', dueDate: '' });
-      fetchData();
+      setFormData({ taskId: '', assignTo: '', dueDate: '' });
+      
+      // Refresh data to get updated list
+      await fetchData();
     } catch (error) {
+      console.error('Assignment Error:', error);
       alert(error.response?.data?.error || 'Failed to assign task');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleClear = () => setFormData({ assignTo: '', dueDate: '' });
+  const handleClear = () => setFormData({ taskId: '', assignTo: '', dueDate: '' });
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-black">
@@ -80,6 +92,15 @@ const TaskAllotment = () => {
         </div>
         <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 rounded-lg shadow p-4 md:p-6 mb-4 md:mb-6">
           <div className="mb-4">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Select Task</label>
+            <select className="w-full px-3 py-2 border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg" value={formData.taskId} onChange={(e) => setFormData({...formData, taskId: e.target.value})} required>
+              <option value="">-- Select Task --</option>
+              {tasks.map(task => (
+                <option key={task._id} value={task._id}>{task.title} - {task.status}</option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4">
             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Assign To Employee</label>
             <select className="w-full px-3 py-2 border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg" value={formData.assignTo} onChange={(e) => setFormData({...formData, assignTo: e.target.value})} required>
               <option value="">-- Select Employee --</option>
@@ -94,42 +115,11 @@ const TaskAllotment = () => {
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
             <button type="submit" disabled={loading} className="bg-cyan-500 text-white px-6 py-2 rounded-lg hover:bg-cyan-600 disabled:opacity-50">
-              {loading ? 'Saving...' : 'Save Allotment'}
+              {loading ? 'Assigning...' : 'Assign Task'}
             </button>
             <button type="button" onClick={handleClear} className="bg-white dark:bg-gray-800 border dark:border-gray-700 dark:text-white px-6 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">Clear</button>
           </div>
         </form>
-        <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4 md:p-6">
-          <h2 className="text-base md:text-lg font-semibold dark:text-white mb-4">Current Allotments</h2>
-          <div className="overflow-x-auto">
-          <table className="w-full min-w-[600px]">
-            <thead>
-              <tr className="border-b dark:border-gray-700">
-                <th className="text-left py-3 font-semibold dark:text-gray-300">Task</th>
-                <th className="text-left py-3 font-semibold dark:text-gray-300">Assigned To</th>
-                <th className="text-left py-3 font-semibold dark:text-gray-300">Status</th>
-                <th className="text-left py-3 font-semibold dark:text-gray-300">Due Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allotments.map(task => (
-                <tr key={task._id} className="border-b dark:border-gray-800">
-                  <td className="py-3 dark:text-gray-300">{task.title}</td>
-                  <td className="py-3 dark:text-gray-300">{task.assignedTo?.name || 'N/A'}</td>
-                  <td className="py-3">
-                    <span className={`px-2 py-1 rounded text-xs ${
-                      task.status === 'Completed' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' :
-                      task.status === 'In-Progress' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' :
-                      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
-                    }`}>{task.status}</span>
-                  </td>
-                  <td className="py-3 dark:text-gray-300">{new Date(task.dueDate).toLocaleDateString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          </div>
-        </div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import API from '../utils/api';
 import Sidebar from '../components/Sidebar';
 import { ListTodo, Clock, CheckCircle, AlertCircle } from 'lucide-react';
@@ -20,13 +20,11 @@ const AdminDashboard = () => {
     }
   };
 
-  const COLORS = ['#a855f7', '#ec4899', '#06b6d4', '#f43f5e'];
-
-  const pieData = stats ? [
-    { name: 'Pending', value: stats.pending },
-    { name: 'In Progress', value: stats.inProgress },
-    { name: 'Completed', value: stats.completed },
-    { name: 'Not Assigned', value: stats.overdue }
+  const barData = stats ? [
+    { name: 'Pending', value: stats.pending, fill: '#ec4899' },
+    { name: 'In Progress', value: stats.inProgress, fill: '#a855f7' },
+    { name: 'Completed', value: stats.completed, fill: '#06b6d4' },
+    { name: 'Not Assigned', value: stats.overdue, fill: '#f43f5e' }
   ] : [];
 
   return (
@@ -82,25 +80,17 @@ const AdminDashboard = () => {
 
               <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 md:p-5 border border-gray-200 dark:border-gray-700">
                 <h2 className="text-sm md:text-base font-bold text-gray-900 dark:text-white mb-4">Task Distribution</h2>
-                <ResponsiveContainer width="100%" height={250}>
-                  <PieChart>
-                    <Pie
-                      data={pieData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {pieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
+                <div className="w-full overflow-x-auto">
+                  <ResponsiveContainer width="100%" height={300} minWidth={300}>
+                    <BarChart data={barData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                      <YAxis tick={{ fontSize: 12 }} />
+                      <Tooltip />
+                      <Bar dataKey="value" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </>
           )}
