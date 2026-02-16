@@ -8,7 +8,9 @@ const CourierOutward = () => {
     <div className="flex min-h-screen bg-gray-50 dark:bg-black">
       <Sidebar />
       <div className="flex-1 p-8">
-        <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Courier Outward Entry</h1>
+        <div className="flex items-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white ml-16 lg:ml-0">Courier Outward Entry</h1>
+        </div>
         <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 mb-6">
           <div className="mb-4">
             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Courier No</label>

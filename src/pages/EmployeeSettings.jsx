@@ -13,7 +13,7 @@ const EmployeeSettings = () => {
       <Sidebar />
       <div className="flex-1 p-6">
         <div className="max-w-4xl mx-auto">
-          <div className="mb-6">
+          <div className="mb-6 ml-16 lg:ml-0">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Settings</h1>
             <p className="text-sm text-gray-600 dark:text-gray-400">Manage your preferences</p>
           </div>

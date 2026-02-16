@@ -30,7 +30,7 @@ const TaskDevelopment = () => {
     <div className="flex min-h-screen bg-gray-50 dark:bg-black">
       <Sidebar />
       <div className="flex-1 p-4 md:p-8 overflow-x-hidden">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 md:mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 md:mb-6 ml-16 lg:ml-0">
           <h1 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">Task Development</h1>
           <button
             onClick={fetchTasks}

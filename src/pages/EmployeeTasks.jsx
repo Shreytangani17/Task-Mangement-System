@@ -93,7 +93,9 @@ const EmployeeTasks = () => {
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar />
       <div className="flex-1 p-8">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">My Tasks</h1>
+        <div className="flex items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-white ml-16 lg:ml-0">My Tasks</h1>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-4">

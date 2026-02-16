@@ -83,7 +83,7 @@ const AdminUsers = () => {
       <Sidebar />
       <div className="flex-1 p-6">
         <div className="max-w-6xl mx-auto">
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex justify-between items-center mb-6 ml-16 lg:ml-0">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">User Management</h1>
               <p className="text-sm text-gray-600 dark:text-gray-400">Manage team members and view their tasks</p>
