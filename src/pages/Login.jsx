@@ -27,7 +27,7 @@ const Login = () => {
         <div className="text-center mb-12">
           <h2 className="text-5xl font-bold text-gray-800 mb-2 animate-slideDown">Sign In</h2>
           <div className="h-1 w-20 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full animate-expandWidth"></div>
-          <p className="text-sm text-gray-500 mt-4">Use: nameadmin@gmail.com or nameemploy@gmail.com</p>
+          <p className="text-sm text-gray-500 mt-4">Use: admin@gmail.com (password: 123)</p>
         </div>
         
         {error && (
@@ -45,7 +45,7 @@ const Login = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="nameadmin@gmail.com or nameemploy@gmail.com"
+              placeholder="admin@gmail.com"
               className="w-full pl-12 pr-4 py-4 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all duration-300 hover:border-purple-300 hover:shadow-md"
               required
             />
@@ -59,7 +59,7 @@ const Login = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="*****"
+              placeholder="123"
               className="w-full pl-12 pr-4 py-4 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all duration-300 hover:border-purple-300 hover:shadow-md"
               required
             />
