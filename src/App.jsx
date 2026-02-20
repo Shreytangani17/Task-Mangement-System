@@ -16,6 +16,7 @@ import EmployeeSettings from './pages/EmployeeSettings';
 import TaskEntry from './pages/TaskEntry';
 import TaskAllotment from './pages/TaskAllotment';
 import TaskDevelopment from './pages/TaskDevelopment';
+import DailyTaskEntry from './pages/DailyTaskEntry';
 import CourierInward from './pages/CourierInward';
 import CourierOutward from './pages/CourierOutward';
 import Notes from './pages/Notes';
@@ -47,7 +48,6 @@ function App() {
             <Route path="/admin" element={<PrivateRoute role="admin"><AdminDashboard /></PrivateRoute>} />
             <Route path="/admin/task-entry" element={<PrivateRoute role="admin"><TaskEntry /></PrivateRoute>} />
             <Route path="/admin/task-allotment" element={<PrivateRoute role="admin"><TaskAllotment /></PrivateRoute>} />
-            <Route path="/admin/task-development" element={<PrivateRoute role="admin"><TaskDevelopment /></PrivateRoute>} />
             <Route path="/admin/courier-inward" element={<PrivateRoute role="admin"><CourierInward /></PrivateRoute>} />
             <Route path="/admin/courier-outward" element={<PrivateRoute role="admin"><CourierOutward /></PrivateRoute>} />
             <Route path="/admin/notes" element={<PrivateRoute role="admin"><Notes /></PrivateRoute>} />
@@ -62,6 +62,7 @@ function App() {
             
             <Route path="/employee" element={<PrivateRoute role="employee"><EmployeeDashboard /></PrivateRoute>} />
             <Route path="/employee/tasks" element={<PrivateRoute role="employee"><EmployeeTasks /></PrivateRoute>} />
+            <Route path="/employee/daily-task-entry" element={<PrivateRoute role="employee"><DailyTaskEntry /></PrivateRoute>} />
             <Route path="/employee/settings" element={<PrivateRoute role="employee"><EmployeeSettings /></PrivateRoute>} />
             
             <Route path="/" element={<Navigate to="/login" />} />

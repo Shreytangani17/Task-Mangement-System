@@ -20,7 +20,6 @@ const Sidebar = () => {
     { path: '/admin', icon: LayoutDashboard, label: 'Dashboard' },
     { path: '/admin/task-entry', icon: FileText, label: 'Task Entry' },
     { path: '/admin/task-allotment', icon: UserCheck, label: 'Task Allotment' },
-    { path: '/admin/task-development', icon: Wrench, label: 'Task Development' },
     { path: '/admin/courier-inward', icon: PackageOpen, label: 'Courier Inward' },
     { path: '/admin/courier-outward', icon: PackageCheck, label: 'Courier Outward' },
     { path: '/admin/notes', icon: StickyNote, label: 'Notes' },
@@ -33,6 +32,7 @@ const Sidebar = () => {
   const employeeLinks = [
     { path: '/employee', icon: LayoutDashboard, label: 'Dashboard' },
     { path: '/employee/tasks', icon: CheckSquare, label: 'My Tasks' },
+    { path: '/employee/daily-task-entry', icon: Calendar, label: 'Daily Task Entry' },
     { path: '/employee/settings', icon: Settings, label: 'Settings' }
   ];
 

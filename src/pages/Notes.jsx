@@ -90,7 +90,7 @@ const Notes = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-black">
+    <div className="flex min-h-screen bg-white dark:bg-black">
       {showToast && <SuccessToast message={toastMessage} onClose={() => setShowToast(false)} />}
       {showConfirm && <ConfirmModal message="Delete this note?" onConfirm={confirmDelete} onCancel={() => setShowConfirm(false)} />}
       <Sidebar />

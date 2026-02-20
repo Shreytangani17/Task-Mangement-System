@@ -5,7 +5,7 @@ const CourierOutward = () => {
   const [formData, setFormData] = useState({ courierNo: '', to: '', sentBy: '', remarks: '' });
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-black">
+    <div className="flex min-h-screen bg-white dark:bg-black">
       <Sidebar />
       <div className="flex-1 p-8">
         <div className="flex items-center mb-6">

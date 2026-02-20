@@ -13,25 +13,25 @@ const seedAdmin = async () => {
     console.log('MongoDB connected');
 
     // Check if admin already exists
-    const existingAdmin = await User.findOne({ email: 'admin@taskflow.com' });
+    const existingAdmin = await User.findOne({ email: 'admin@gmail.com' });
     let admin;
     if (existingAdmin) {
       console.log('Admin user already exists');
       admin = existingAdmin;
     } else {
       // Create admin user
-      const hashedPassword = await bcrypt.hash('admin123', 10);
+      const hashedPassword = await bcrypt.hash('123', 10);
       admin = new User({
         name: 'Admin User',
-        email: 'admin@taskflow.com',
+        email: 'admin@gmail.com',
         password: hashedPassword,
         role: 'admin'
       });
 
       await admin.save();
       console.log('Admin user created successfully');
-      console.log('Email: admin@taskflow.com');
-      console.log('Password: admin123');
+      console.log('Email: admin@gmail.com');
+      console.log('Password: 123');
     }
     
     // Create sample employees

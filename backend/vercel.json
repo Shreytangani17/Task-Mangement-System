@@ -13,12 +13,11 @@
     }
   ],
   "functions": {
+    "api/**/*.js": {
+      "maxDuration": 30
+    },
     "server.js": {
-      "maxDuration": 10
+      "maxDuration": 30
     }
-  },
-  "env": {
-    "EMAIL_USER": "rshreya085@gmail.com",
-    "EMAIL_PASS": "rgnngwxorqtpmbad"
   }
 }
