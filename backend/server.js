@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -18,36 +17,28 @@ const employeeMasterRoutes = require('./routes/employeeMaster');
 const app = express();
 
 // Middleware
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? (process.env.FRONTEND_URL || true)
-    : ['http://localhost:5173', 'http://localhost:5174'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // MongoDB Connection
+let isConnected = false;
+
 const connectDB = async () => {
+  if (isConnected) return;
+  
   try {
     await mongoose.connect(process.env.MONGODB_URI, {
       serverSelectionTimeoutMS: 30000,
       socketTimeoutMS: 45000,
     });
-    console.log('✅ MongoDB connected successfully');
+    isConnected = true;
+    console.log('✅ MongoDB connected');
   } catch (error) {
-    console.error('❌ MongoDB connection error:', error.message);
+    console.error('❌ MongoDB error:', error.message);
     throw error;
   }
 };
-
-// Connect to MongoDB on startup
-connectDB().catch(err => {
-  console.error('Failed to connect to MongoDB:', err.message);
-  process.exit(1);
-});
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -55,11 +46,13 @@ app.get('/api/health', (req, res) => {
 });
 
 // DB middleware
-app.use((req, res, next) => {
-  if (mongoose.connection.readyState !== 1) {
-    return res.status(500).json({ error: 'Database connection failed' });
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    res.status(500).json({ error: 'Database connection failed' });
   }
-  next();
 });
 
 // Routes
