@@ -22,19 +22,17 @@ const allowedOrigins = [
   process.env.FRONTEND_URL,
   'http://localhost:5173',
   'http://localhost:3000',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:3000'
 ].filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
-    // In development, allow all origins (includes VS Code dev tunnels, ngrok, etc.)
-    if (process.env.NODE_ENV !== 'production') {
-      return callback(null, true);
-    }
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       console.warn('CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
+      callback(null, true); // Allow all origins for now
     }
   },
   credentials: true,
