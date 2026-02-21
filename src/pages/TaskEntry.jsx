@@ -11,6 +11,7 @@ const TaskEntry = () => {
   const [showToast, setShowToast] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [editId, setEditId] = useState(null);
 
   useEffect(() => {
     fetchTasks();
@@ -41,9 +42,14 @@ const TaskEntry = () => {
       return;
     }
     try {
-      await API.post('/task-entries', formData);
+      if (editId) {
+        await API.put(`/task-entries/${editId}`, formData);
+      } else {
+        await API.post('/task-entries', formData);
+      }
       setShowToast(true);
       setFormData({ title: '', description: '', priority: 'Medium', status: 'Pending', dueDate: '', dueTime: '' });
+      setEditId(null);
       fetchTasks();
     } catch (error) {
       console.error('Save error:', error.response || error);
@@ -68,8 +74,21 @@ const TaskEntry = () => {
     }
   };
 
+  const handleEdit = (task) => {
+    setFormData({
+      title: task.title,
+      description: task.description || '',
+      priority: task.priority,
+      status: task.status,
+      dueDate: task.dueDate ? task.dueDate.split('T')[0] : '',
+      dueTime: task.dueTime || ''
+    });
+    setEditId(task._id);
+  };
+
   const handleClear = () => {
     setFormData({ title: '', description: '', priority: 'Medium', status: 'Pending', dueDate: '', dueTime: '' });
+    setEditId(null);
   };
 
   return (
@@ -118,7 +137,7 @@ const TaskEntry = () => {
             </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
-            <button onClick={handleSave} className="bg-cyan-500 text-white px-6 py-2 rounded-lg hover:bg-cyan-600">Save Task</button>
+            <button onClick={handleSave} className="bg-cyan-500 text-white px-6 py-2 rounded-lg hover:bg-cyan-600">{editId ? 'Update Task' : 'Save Task'}</button>
             <button onClick={handleClear} className="bg-white dark:bg-gray-800 border dark:border-gray-700 dark:text-white px-6 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">Clear</button>
           </div>
         </div>
@@ -147,7 +166,8 @@ const TaskEntry = () => {
                   <td className="py-3 dark:text-gray-300">{task.assignedTo?.name || 'Unassigned'}</td>
                   <td className="py-3 dark:text-gray-300">{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'N/A'} {task.dueTime || ''}</td>
                   <td className="py-3">
-                    <button onClick={() => handleDelete(task._id)} className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">Delete</button>
+                    <button onClick={() => handleDelete(task._id)} className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 mr-3">Delete</button>
+                    <button onClick={() => handleEdit(task)} className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">Edit</button>
                   </td>
                 </tr>
               ))}
