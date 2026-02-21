@@ -28,6 +28,7 @@ exports.signup = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
+    console.log('Login attempt:', req.body.email);
     const { email, password } = req.body;
     
     if (!email || !password) {
@@ -35,11 +36,13 @@ exports.login = async (req, res) => {
     }
     
     const user = await User.findOne({ email });
+    console.log('User found:', !!user);
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log('Password match:', isMatch);
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
