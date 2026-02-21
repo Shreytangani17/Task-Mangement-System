@@ -67,6 +67,10 @@ const connectDB = async () => {
 };
 
 // Health check
+app.get('/', (req, res) => {
+  res.json({ message: 'Task Management API', status: 'running' });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
