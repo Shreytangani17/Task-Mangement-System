@@ -143,31 +143,35 @@ const TaskEntry = () => {
         </div>
         <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4 md:p-6 border border-gray-200 dark:border-gray-700">
           <h2 className="text-lg font-bold mb-4 dark:text-white">Task List</h2>
-          <div className="overflow-x-auto -mx-4 md:mx-0">
-          <table className="w-full min-w-[800px]">
+          <div className="overflow-x-auto">
+          <table className="w-full min-w-[900px]">
             <thead>
               <tr className="border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-                <th className="text-left py-3 px-3 font-semibold dark:text-gray-300 text-sm whitespace-nowrap">Status</th>
-                <th className="text-left py-3 px-3 font-semibold dark:text-gray-300 text-sm whitespace-nowrap">Employee</th>
-                <th className="text-left py-3 px-3 font-semibold dark:text-gray-300 text-sm whitespace-nowrap">Due Date</th>
-                <th className="text-left py-3 px-3 font-semibold dark:text-gray-300 text-sm whitespace-nowrap">Action</th>
+                <th className="text-left py-3 px-2 font-semibold dark:text-gray-300 text-xs md:text-sm whitespace-nowrap">Task ID</th>
+                <th className="text-left py-3 px-2 font-semibold dark:text-gray-300 text-xs md:text-sm whitespace-nowrap">Task Name</th>
+                <th className="text-left py-3 px-2 font-semibold dark:text-gray-300 text-xs md:text-sm whitespace-nowrap">Status</th>
+                <th className="text-left py-3 px-2 font-semibold dark:text-gray-300 text-xs md:text-sm whitespace-nowrap">Employee</th>
+                <th className="text-left py-3 px-2 font-semibold dark:text-gray-300 text-xs md:text-sm whitespace-nowrap">Due Date</th>
+                <th className="text-center py-3 px-2 font-semibold dark:text-gray-300 text-xs md:text-sm whitespace-nowrap">Edit</th>
+                <th className="text-center py-3 px-2 font-semibold dark:text-gray-300 text-xs md:text-sm whitespace-nowrap">Delete</th>
               </tr>
             </thead>
             <tbody>
               {tasks.map(task => (
                 <tr key={task._id} className="border-b dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
-                  <td className="py-3 px-3 dark:text-gray-300 text-sm whitespace-nowrap">{task.status}</td>
-                  <td className="py-3 px-3 dark:text-gray-300 text-sm whitespace-nowrap">{task.assignedTo?.name || 'Unassigned'}</td>
-                  <td className="py-3 px-3 dark:text-gray-300 text-sm whitespace-nowrap">
+                  <td className="py-3 px-2 dark:text-gray-300 text-xs md:text-sm whitespace-nowrap">{task.taskId || task._id.slice(-6)}</td>
+                  <td className="py-3 px-2 dark:text-gray-300 text-xs md:text-sm max-w-[150px] truncate" title={task.title}>{task.title}</td>
+                  <td className="py-3 px-2 dark:text-gray-300 text-xs md:text-sm whitespace-nowrap">{task.status}</td>
+                  <td className="py-3 px-2 dark:text-gray-300 text-xs md:text-sm whitespace-nowrap">{task.assignedTo?.name || 'Unassigned'}</td>
+                  <td className="py-3 px-2 dark:text-gray-300 text-xs md:text-sm whitespace-nowrap">
                     {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'N/A'}
-                    <br />
-                    <span className="text-xs text-gray-500 dark:text-gray-400">{task.dueTime || ''}</span>
+                    {task.dueTime && <><br /><span className="text-xs text-gray-500 dark:text-gray-400">{task.dueTime}</span></>}
                   </td>
-                  <td className="py-3 px-3">
-                    <div className="flex flex-col gap-1">
-                      <button onClick={() => handleDelete(task._id)} className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-sm whitespace-nowrap">Delete</button>
-                      <button onClick={() => handleEdit(task)} className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm whitespace-nowrap">Edit</button>
-                    </div>
+                  <td className="py-3 px-2 text-center">
+                    <button onClick={() => handleEdit(task)} className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-xs md:text-sm whitespace-nowrap px-3 py-1">Edit</button>
+                  </td>
+                  <td className="py-3 px-2 text-center">
+                    <button onClick={() => handleDelete(task._id)} className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-xs md:text-sm whitespace-nowrap px-3 py-1">Delete</button>
                   </td>
                 </tr>
               ))}
