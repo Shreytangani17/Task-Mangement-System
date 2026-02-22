@@ -92,35 +92,36 @@ const EmployeeTasks = () => {
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar />
-      <div className="flex-1 p-8">
-        <div className="flex items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white ml-16 lg:ml-0">My Tasks</h1>
+      <div className="flex-1 p-4 md:p-6 lg:p-8 overflow-x-hidden">
+        <div className="pt-16 lg:pt-0">
+        <div className="flex items-center mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">My Tasks</h1>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+          <div className="space-y-3 md:space-y-4">
             {tasks.map((task) => {
               const isOverdue = task.status !== 'Completed' && new Date(task.dueDate) < new Date();
               return (
                 <div
                   key={task._id}
                   onClick={() => fetchTaskDetails(task._id)}
-                  className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 cursor-pointer hover:shadow-md transition ${
+                  className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 md:p-6 cursor-pointer hover:shadow-md transition ${
                     selectedTask?._id === task._id ? 'ring-2 ring-indigo-500' : ''
                   }`}
                 >
-                  <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">{task.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">{task.description}</p>
-                  <div className="flex items-center space-x-3 mb-3">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(task.priority)}`}>
+                  <h3 className="text-base md:text-lg font-bold text-gray-800 dark:text-white mb-2">{task.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm mb-3 md:mb-4 line-clamp-2">{task.description}</p>
+                  <div className="flex items-center flex-wrap gap-2 mb-3">
+                    <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(task.priority)}`}>
                       {task.priority}
                     </span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status)}`}>
+                    <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status)}`}>
                       {task.status}
                     </span>
                   </div>
-                  <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm">
-                    <Calendar className="w-4 h-4 mr-1" />
+                  <div className="flex items-center text-gray-600 dark:text-gray-400 text-xs md:text-sm">
+                    <Calendar className="w-3 h-3 md:w-4 md:h-4 mr-1" />
                     Due: {new Date(task.dueDate).toLocaleDateString()}
                     {isOverdue && <span className="ml-2 text-red-600 font-medium">Overdue!</span>}
                   </div>
@@ -130,16 +131,16 @@ const EmployeeTasks = () => {
           </div>
 
           {selectedTask && (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 sticky top-8 h-fit">
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">{selectedTask.title}</h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">{selectedTask.description}</p>
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 md:p-6 lg:sticky lg:top-8 h-fit">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white mb-3 md:mb-4">{selectedTask.title}</h2>
+              <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base mb-4 md:mb-6">{selectedTask.description}</p>
 
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Update Status</label>
+              <div className="mb-4 md:mb-6">
+                <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Update Status</label>
                 <select
                   value={selectedTask.status}
                   onChange={(e) => updateStatus(selectedTask._id, e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 md:px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm md:text-base"
                 >
                   <option value="Pending">Pending</option>
                   <option value="In-Progress">In Progress</option>
@@ -147,16 +148,16 @@ const EmployeeTasks = () => {
                 </select>
               </div>
 
-              <div className="mb-6">
-                <h3 className="font-semibold text-gray-800 dark:text-white mb-3 flex items-center">
-                  <MessageSquare className="w-5 h-5 mr-2" />
+              <div className="mb-4 md:mb-6">
+                <h3 className="font-semibold text-gray-800 dark:text-white mb-3 flex items-center text-sm md:text-base">
+                  <MessageSquare className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                   Comments
                 </h3>
-                <div className="space-y-3 mb-4 max-h-48 overflow-y-auto">
+                <div className="space-y-2 md:space-y-3 mb-3 md:mb-4 max-h-48 overflow-y-auto">
                   {comments.map((comment) => (
-                    <div key={comment._id} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
-                      <p className="text-sm font-medium text-gray-800 dark:text-white">{comment.user.name}</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{comment.text}</p>
+                    <div key={comment._id} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-2 md:p-3">
+                      <p className="text-xs md:text-sm font-medium text-gray-800 dark:text-white">{comment.user.name}</p>
+                      <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1">{comment.text}</p>
                       <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
                         {new Date(comment.createdAt).toLocaleString()}
                       </p>
@@ -169,49 +170,50 @@ const EmployeeTasks = () => {
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Add a comment..."
-                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"
+                    className="flex-1 px-3 md:px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm md:text-base"
                   />
                   <button
                     onClick={addComment}
                     className="bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
                   >
-                    <Send className="w-5 h-5" />
+                    <Send className="w-4 h-4 md:w-5 md:h-5" />
                   </button>
                 </div>
               </div>
 
               <div>
-                <h3 className="font-semibold text-gray-800 dark:text-white mb-3 flex items-center">
-                  <Paperclip className="w-5 h-5 mr-2" />
+                <h3 className="font-semibold text-gray-800 dark:text-white mb-3 flex items-center text-sm md:text-base">
+                  <Paperclip className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                   Attachments
                 </h3>
-                <div className="space-y-2 mb-4">
+                <div className="space-y-2 mb-3 md:mb-4">
                   {attachments.map((att) => (
-                    <div key={att._id} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 text-sm">
-                      <p className="font-medium text-gray-800 dark:text-white">{att.filename}</p>
+                    <div key={att._id} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-2 md:p-3 text-xs md:text-sm">
+                      <p className="font-medium text-gray-800 dark:text-white truncate">{att.filename}</p>
                       <p className="text-xs text-gray-500 dark:text-gray-400">
                         Uploaded by {att.user.name} on {new Date(att.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                   ))}
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="file"
                     onChange={(e) => setFile(e.target.files[0])}
-                    className="flex-1 text-sm dark:text-gray-300"
+                    className="flex-1 text-xs md:text-sm dark:text-gray-300"
                   />
                   <button
                     onClick={uploadFile}
                     disabled={!file}
-                    className="bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:hover:scale-100"
+                    className="bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:hover:scale-100 sm:w-auto w-full"
                   >
-                    <Upload className="w-5 h-5" />
+                    <Upload className="w-4 h-4 md:w-5 md:h-5 mx-auto" />
                   </button>
                 </div>
               </div>
             </div>
           )}
+        </div>
         </div>
       </div>
     </div>

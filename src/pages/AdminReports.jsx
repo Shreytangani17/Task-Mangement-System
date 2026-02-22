@@ -162,28 +162,29 @@ const AdminReports = () => {
             />
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg overflow-x-auto border border-gray-200 dark:border-gray-700">
-            <table className="w-full">
+          <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+            <div className="overflow-x-auto">
+            <table className="w-full min-w-[800px]">
               <thead className="bg-gray-100 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">Task ID</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">Task Name</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">Description</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">Employee</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300">Status</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300">Due Date</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300">Time</th>
+                  <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Task ID</th>
+                  <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Task Name</th>
+                  <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Description</th>
+                  <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Employee</th>
+                  <th className="px-3 sm:px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Status</th>
+                  <th className="px-3 sm:px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Due Date</th>
+                  <th className="px-3 sm:px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Time</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                 {tasks.map((task) => (
                   <tr key={task._id} className="hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{task.taskId}</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{task.title}</td>
-                    <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{task.description?.substring(0, 40)}{task.description?.length > 40 ? '...' : ''}</td>
-                    <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{task.assignedTo?.name || 'Unassigned'}</td>
-                    <td className="px-4 py-3 text-center">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    <td className="px-3 sm:px-4 py-3 text-xs sm:text-sm text-gray-900 dark:text-white whitespace-nowrap">{task.taskId}</td>
+                    <td className="px-3 sm:px-4 py-3 text-xs sm:text-sm text-gray-900 dark:text-white whitespace-nowrap">{task.title}</td>
+                    <td className="px-3 sm:px-4 py-3 text-xs sm:text-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate">{task.description?.substring(0, 40)}{task.description?.length > 40 ? '...' : ''}</td>
+                    <td className="px-3 sm:px-4 py-3 text-xs sm:text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">{task.assignedTo?.name || 'Unassigned'}</td>
+                    <td className="px-3 sm:px-4 py-3 text-center">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
                         task.status === 'Completed' ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300' :
                         task.status === 'In Progress' ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300' :
                         'bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300'
@@ -191,16 +192,17 @@ const AdminReports = () => {
                         {task.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-center text-sm text-gray-600 dark:text-gray-400">
+                    <td className="px-3 sm:px-4 py-3 text-center text-xs sm:text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
                       {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'N/A'}
                     </td>
-                    <td className="px-4 py-3 text-center text-sm text-gray-600 dark:text-gray-400">
+                    <td className="px-3 sm:px-4 py-3 text-center text-xs sm:text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
                       {task.dueTime || 'N/A'}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       </div>

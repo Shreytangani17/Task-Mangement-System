@@ -49,14 +49,14 @@ const AdminDashboard = () => {
       <Sidebar />
       <div className="flex-1 p-4 md:p-6 overflow-x-hidden lg:ml-0">
         <div className="max-w-6xl mx-auto pt-16 lg:pt-0">
-          <div className="flex justify-between items-center mb-4 md:mb-6">
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Dashboard Overview</h1>
-            <div className="flex items-center gap-2">
-              <label className="text-sm text-gray-700 dark:text-gray-300">Filter:</label>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 md:mb-6">
+            <h1 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">Dashboard Overview</h1>
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <label className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 whitespace-nowrap">Filter:</label>
               <select
                 value={selectedEmployee}
                 onChange={(e) => setSelectedEmployee(e.target.value)}
-                className="px-3 py-2 border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg text-sm"
+                className="flex-1 sm:flex-none px-2 sm:px-3 py-2 border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg text-xs sm:text-sm"
               >
                 <option value="">All Employees</option>
                 {employees.map(emp => (

@@ -83,14 +83,14 @@ const AdminUsers = () => {
       <Sidebar />
       <div className="flex-1 p-6">
         <div className="max-w-6xl mx-auto">
-          <div className="flex justify-between items-center mb-6 ml-16 lg:ml-0">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">User Management</h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Manage team members and view their tasks</p>
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-1">User Management</h1>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Manage team members and view their tasks</p>
             </div>
             <button
               onClick={() => setShowModal(true)}
-              className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm flex items-center space-x-2 hover:bg-purple-700 transition"
+              className="bg-purple-600 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-2 hover:bg-purple-700 transition w-full sm:w-auto justify-center"
             >
               <UserPlus className="w-4 h-4" />
               <span>Add User</span>
@@ -100,19 +100,19 @@ const AdminUsers = () => {
           <div className="space-y-3">
             {users.map((user) => (
               <div key={user._id}>
-                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700 transition">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3 flex-1">
-                      <div className="bg-purple-100 dark:bg-purple-900 p-3 rounded-lg">
-                        <Mail className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700 transition">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div className="flex items-center space-x-3 flex-1 w-full">
+                      <div className="bg-purple-100 dark:bg-purple-900 p-2 sm:p-3 rounded-lg">
+                        <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 dark:text-purple-400" />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="text-base font-semibold text-gray-900 dark:text-white">{user.name}</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">{user.email}</p>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white truncate">{user.name}</h3>
+                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">{user.email}</p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <span className={`px-3 py-1 rounded-lg text-xs font-medium ${
+                    <div className="flex items-center space-x-2 w-full sm:w-auto">
+                      <span className={`px-2 sm:px-3 py-1 rounded-lg text-xs font-medium ${
                         user.role === 'admin' 
                           ? 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300' 
                           : 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
@@ -122,10 +122,11 @@ const AdminUsers = () => {
                       {user.role === 'employee' && (
                         <button
                           onClick={() => fetchUserTasks(user._id)}
-                          className="bg-purple-50 dark:bg-purple-900 text-purple-600 dark:text-purple-300 px-3 py-1 rounded-lg text-xs font-medium hover:bg-purple-100 dark:hover:bg-purple-800 transition flex items-center space-x-1"
+                          className="bg-purple-50 dark:bg-purple-900 text-purple-600 dark:text-purple-300 px-2 sm:px-3 py-1 rounded-lg text-xs font-medium hover:bg-purple-100 dark:hover:bg-purple-800 transition flex items-center space-x-1 flex-1 sm:flex-none justify-center"
                         >
                           <Briefcase className="w-3 h-3" />
-                          <span>{selectedUser === user._id ? 'Hide Tasks' : 'View Tasks'}</span>
+                          <span className="hidden sm:inline">{selectedUser === user._id ? 'Hide Tasks' : 'View Tasks'}</span>
+                          <span className="sm:hidden">{selectedUser === user._id ? 'Hide' : 'View'}</span>
                         </button>
                       )}
                     </div>

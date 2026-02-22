@@ -58,9 +58,9 @@ const EmployeeDashboard = () => {
       <Sidebar />
       <div className="flex-1 p-4 md:p-6 overflow-x-hidden lg:ml-0">
         <div className="max-w-6xl mx-auto pt-16 lg:pt-0">
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-1">
                 Welcome, {user?.name}!
               </h1>
               <p className="text-sm text-gray-600 dark:text-gray-400">Here's your task overview</p>
@@ -80,7 +80,7 @@ const EmployeeDashboard = () => {
               {showNotifications && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setShowNotifications(false)}></div>
-                  <div className="absolute right-0 mt-2 w-96 bg-white rounded-xl shadow-2xl border-2 border-black z-50 overflow-hidden">
+                  <div className="absolute right-0 mt-2 w-80 sm:w-96 max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-2xl border-2 border-black z-50 overflow-hidden">
                   <div className="bg-black text-white p-4">
                     <h3 className="font-bold text-lg">Notifications</h3>
                   </div>
@@ -110,44 +110,44 @@ const EmployeeDashboard = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-4 shadow-lg">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
+            <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-3 md:p-4 shadow-lg">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-purple-100 font-medium">Total Tasks</p>
-                  <p className="text-2xl font-bold text-white mt-1">{stats.total}</p>
+                  <p className="text-xl md:text-2xl font-bold text-white mt-1">{stats.total}</p>
                 </div>
-                <ListTodo className="w-8 h-8 text-white opacity-80" />
+                <ListTodo className="w-6 h-6 md:w-8 md:h-8 text-white opacity-80" />
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg p-4 shadow-lg">
+            <div className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg p-3 md:p-4 shadow-lg">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-pink-100 font-medium">Pending</p>
-                  <p className="text-2xl font-bold text-white mt-1">{stats.pending}</p>
+                  <p className="text-xl md:text-2xl font-bold text-white mt-1">{stats.pending}</p>
                 </div>
-                <Clock className="w-8 h-8 text-white opacity-80" />
+                <Clock className="w-6 h-6 md:w-8 md:h-8 text-white opacity-80" />
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg p-4 shadow-lg">
+            <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg p-3 md:p-4 shadow-lg">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-cyan-100 font-medium">Completed</p>
-                  <p className="text-2xl font-bold text-white mt-1">{stats.completed}</p>
+                  <p className="text-xl md:text-2xl font-bold text-white mt-1">{stats.completed}</p>
                 </div>
-                <CheckCircle className="w-8 h-8 text-white opacity-80" />
+                <CheckCircle className="w-6 h-6 md:w-8 md:h-8 text-white opacity-80" />
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-rose-500 to-rose-600 rounded-lg p-4 shadow-lg">
+            <div className="bg-gradient-to-br from-rose-500 to-rose-600 rounded-lg p-3 md:p-4 shadow-lg">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-rose-100 font-medium">Overdue</p>
-                  <p className="text-2xl font-bold text-white mt-1">{stats.overdue}</p>
+                  <p className="text-xl md:text-2xl font-bold text-white mt-1">{stats.overdue}</p>
                 </div>
-                <AlertCircle className="w-8 h-8 text-white opacity-80" />
+                <AlertCircle className="w-6 h-6 md:w-8 md:h-8 text-white opacity-80" />
               </div>
             </div>
           </div>

@@ -113,28 +113,28 @@ const AdminTasks = () => {
   return (
     <div className="flex min-h-screen bg-white dark:bg-gray-900">
       <Sidebar />
-      <div className="flex-1 p-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex justify-between items-center mb-6 ml-16 lg:ml-0">
+      <div className="flex-1 p-4 md:p-6 overflow-x-hidden">
+        <div className="max-w-6xl mx-auto pt-16 lg:pt-0">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 gap-3">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Task Management</h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Create and assign tasks</p>
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-1">Task Management</h1>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Create and assign tasks</p>
             </div>
             <button
               onClick={() => setShowModal(true)}
-              className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm flex items-center space-x-2 hover:bg-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+              className="bg-purple-600 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-2 hover:bg-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg w-full sm:w-auto justify-center"
             >
               <Plus className="w-4 h-4" />
               <span>New Task</span>
             </button>
           </div>
 
-          <div className="flex space-x-2 mb-6">
+          <div className="flex flex-wrap gap-2 mb-4 md:mb-6">
             {['all', 'Pending', 'In-Progress', 'Completed'].map((f) => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                className={`px-3 md:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition ${
                   filter === f 
                     ? 'bg-purple-600 text-white' 
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
@@ -147,23 +147,23 @@ const AdminTasks = () => {
 
           <div className="space-y-3">
             {filteredTasks.map((task) => (
-              <div key={task._id} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700 transition">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-2">{task.title}</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{task.description}</p>
+              <div key={task._id} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 md:p-4 border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700 transition">
+                <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
+                  <div className="flex-1 w-full">
+                    <h3 className="text-sm md:text-base font-semibold text-gray-900 dark:text-white mb-2">{task.title}</h3>
+                    <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">{task.description}</p>
                     <div className="flex items-center flex-wrap gap-2 mb-3">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(task.priority)}`}>
+                      <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(task.priority)}`}>
                         {task.priority}
                       </span>
-                      <div className="flex items-center text-gray-600 dark:text-gray-400 text-xs bg-white dark:bg-gray-700 px-3 py-1 rounded-full">
+                      <div className="flex items-center text-gray-600 dark:text-gray-400 text-xs bg-white dark:bg-gray-700 px-2 md:px-3 py-1 rounded-full">
                         <Calendar className="w-3 h-3 mr-1" />
                         {new Date(task.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                       </div>
                       {task.assignedTo ? (
-                        <div className="flex items-center text-purple-600 dark:text-purple-400 text-xs bg-purple-50 dark:bg-purple-900 px-3 py-1 rounded-full">
+                        <div className="flex items-center text-purple-600 dark:text-purple-400 text-xs bg-purple-50 dark:bg-purple-900 px-2 md:px-3 py-1 rounded-full">
                           <User className="w-3 h-3 mr-1" />
-                          {task.assignedTo?.name}
+                          <span className="truncate max-w-[120px]">{task.assignedTo?.name}</span>
                         </div>
                       ) : (
                         <button
@@ -171,19 +171,19 @@ const AdminTasks = () => {
                             setSelectedTaskForAssign(task._id);
                             setShowAssignModal(true);
                           }}
-                          className="flex items-center text-orange-600 dark:text-orange-400 text-xs bg-orange-50 dark:bg-orange-900 px-3 py-1 rounded-full hover:bg-orange-100 dark:hover:bg-orange-800 transition"
+                          className="flex items-center text-orange-600 dark:text-orange-400 text-xs bg-orange-50 dark:bg-orange-900 px-2 md:px-3 py-1 rounded-full hover:bg-orange-100 dark:hover:bg-orange-800 transition"
                         >
                           <User className="w-3 h-3 mr-1" />
-                          Assign to Employee
+                          <span className="whitespace-nowrap">Assign to Employee</span>
                         </button>
                       )}
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-xs text-gray-600 dark:text-gray-400">Status:</span>
                       <select
                         value={task.status}
                         onChange={(e) => handleStatusChange(task._id, e.target.value)}
-                        className={`px-3 py-1 rounded-full text-xs font-medium border-0 cursor-pointer ${getStatusColor(task.status)}`}
+                        className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium border-0 cursor-pointer ${getStatusColor(task.status)}`}
                       >
                         <option value="Pending">Pending</option>
                         <option value="In-Progress">In-Progress</option>
@@ -193,7 +193,7 @@ const AdminTasks = () => {
                   </div>
                   <button
                     onClick={() => handleDelete(task._id)}
-                    className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-2 transition-all duration-300 transform hover:scale-110"
+                    className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-2 transition-all duration-300 transform hover:scale-110 self-start sm:self-auto"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

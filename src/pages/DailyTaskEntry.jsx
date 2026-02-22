@@ -79,26 +79,26 @@ const DailyTaskEntry = () => {
           <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4 md:p-6 border border-gray-200 dark:border-gray-700">
             <h2 className="text-lg font-bold mb-4 dark:text-white">Today's Tasks</h2>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[600px]">
+              <table className="w-full min-w-[800px]">
                 <thead>
-                  <tr className="border-b dark:border-gray-700">
-                    <th className="text-left py-3 font-semibold dark:text-gray-300">Task ID</th>
-                    <th className="text-left py-3 font-semibold dark:text-gray-300">Entry Date</th>
-                    <th className="text-left py-3 font-semibold dark:text-gray-300">Task Name</th>
-                    <th className="text-left py-3 font-semibold dark:text-gray-300">Description</th>
-                    <th className="text-left py-3 font-semibold dark:text-gray-300">Status</th>
-                    <th className="text-left py-3 font-semibold dark:text-gray-300">Time</th>
+                  <tr className="border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                    <th className="text-left py-3 px-3 font-semibold dark:text-gray-300 text-xs sm:text-sm whitespace-nowrap">Task ID</th>
+                    <th className="text-left py-3 px-3 font-semibold dark:text-gray-300 text-xs sm:text-sm whitespace-nowrap">Entry Date</th>
+                    <th className="text-left py-3 px-3 font-semibold dark:text-gray-300 text-xs sm:text-sm whitespace-nowrap">Task Name</th>
+                    <th className="text-left py-3 px-3 font-semibold dark:text-gray-300 text-xs sm:text-sm whitespace-nowrap">Description</th>
+                    <th className="text-left py-3 px-3 font-semibold dark:text-gray-300 text-xs sm:text-sm whitespace-nowrap">Status</th>
+                    <th className="text-left py-3 px-3 font-semibold dark:text-gray-300 text-xs sm:text-sm whitespace-nowrap">Time</th>
                   </tr>
                 </thead>
                 <tbody>
                   {tasks.map(task => (
-                    <tr key={task._id} className="border-b dark:border-gray-800">
-                      <td className="py-3 dark:text-gray-300">{task.taskId || 'N/A'}</td>
-                      <td className="py-3 dark:text-gray-300">{new Date(task.createdAt).toLocaleDateString()}</td>
-                      <td className="py-3 dark:text-gray-300">{task.title}</td>
-                      <td className="py-3 dark:text-gray-300">{task.description?.substring(0, 30)}{task.description?.length > 30 ? '...' : ''}</td>
-                      <td className="py-3 dark:text-gray-300">{task.status}</td>
-                      <td className="py-3 dark:text-gray-300">{task.time || 'N/A'}</td>
+                    <tr key={task._id} className="border-b dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                      <td className="py-3 px-3 dark:text-gray-300 text-xs sm:text-sm whitespace-nowrap">{task.taskId || 'N/A'}</td>
+                      <td className="py-3 px-3 dark:text-gray-300 text-xs sm:text-sm whitespace-nowrap">{new Date(task.createdAt).toLocaleDateString()}</td>
+                      <td className="py-3 px-3 dark:text-gray-300 text-xs sm:text-sm whitespace-nowrap">{task.title}</td>
+                      <td className="py-3 px-3 dark:text-gray-300 text-xs sm:text-sm max-w-[200px] truncate">{task.description?.substring(0, 30)}{task.description?.length > 30 ? '...' : ''}</td>
+                      <td className="py-3 px-3 dark:text-gray-300 text-xs sm:text-sm whitespace-nowrap">{task.status}</td>
+                      <td className="py-3 px-3 dark:text-gray-300 text-xs sm:text-sm whitespace-nowrap">{task.time || 'N/A'}</td>
                     </tr>
                   ))}
                 </tbody>
