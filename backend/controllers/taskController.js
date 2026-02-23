@@ -8,7 +8,7 @@ const { sendTaskAssignmentEmail } = require('../utils/emailService');
 exports.createTask = async (req, res) => {
   try {
     const { title, description, priority, dueDate, assignedTo } = req.body;
-    
+
     const task = new Task({
       title,
       description,
@@ -18,27 +18,29 @@ exports.createTask = async (req, res) => {
       createdBy: req.user._id,
       statusHistory: [{ status: 'Pending', changedBy: req.user._id }]
     });
-    
+
     await task.save();
     await task.populate('assignedTo createdBy', 'name email');
-    
+
+    // ✅ Respond immediately
+    res.status(201).json(task);
+
+    // Fire notification + email in background (non-blocking)
     if (assignedTo) {
-      await new Notification({
+      new Notification({
         user: assignedTo,
         task: task._id,
         type: 'assignment',
         message: `New task assigned: ${title}`
-      }).save();
-      
-      const employee = await User.findById(assignedTo);
-      if (employee) {
-        console.log(`Sending email to: ${employee.email} (${employee.name})`);
-        await sendTaskAssignmentEmail(employee.email, employee.name, title, description, dueDate);
-        console.log(`Email sent successfully to: ${employee.email}`);
-      }
+      }).save().catch(err => console.error('Notification save error:', err.message));
+
+      User.findById(assignedTo).lean().then(employee => {
+        if (employee) {
+          sendTaskAssignmentEmail(employee.email, employee.name, title, description, dueDate)
+            .catch(err => console.error('Background email error (createTask):', err.message));
+        }
+      }).catch(err => console.error('User lookup error:', err.message));
     }
-    
-    res.status(201).json(task);
   } catch (error) {
     console.error('Error in createTask:', error);
     res.status(500).json({ error: error.message });
@@ -73,22 +75,22 @@ exports.updateTaskStatus = async (req, res) => {
   try {
     const { status } = req.body;
     const task = await Task.findById(req.params.id);
-    
+
     if (!task) {
       return res.status(404).json({ error: 'Task not found' });
     }
-    
+
     if (req.user.role === 'employee' && task.assignedTo.toString() !== req.user._id.toString()) {
       return res.status(403).json({ error: 'Not authorized' });
     }
-    
+
     task.status = status;
     task.updatedAt = Date.now();
     task.statusHistory.push({ status, changedBy: req.user._id });
-    
+
     await task.save();
     await task.populate('assignedTo createdBy', 'name email');
-    
+
     res.json(task);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -99,35 +101,35 @@ exports.assignTask = async (req, res) => {
   try {
     const { assignedTo, dueDate } = req.body;
     const task = await Task.findById(req.params.id);
-    
+
     if (!task) {
       return res.status(404).json({ error: 'Task not found' });
     }
-    
+
     task.assignedTo = assignedTo;
     if (dueDate) task.dueDate = dueDate;
     task.updatedAt = Date.now();
-    
+
     await task.save();
     await task.populate('assignedTo createdBy', 'name email');
-    
-    await new Notification({
+
+    // ✅ Respond immediately
+    res.json(task);
+
+    // Fire notification + email in background (non-blocking)
+    new Notification({
       user: assignedTo,
       task: task._id,
       type: 'assignment',
       message: `New task assigned: ${task.title}`
-    }).save();
-    
-    const employee = await User.findById(assignedTo);
-    if (employee) {
-      console.log(`Sending email to: ${employee.email} (${employee.name})`);
-      await sendTaskAssignmentEmail(employee.email, employee.name, task.title, task.description, task.dueDate);
-      console.log(`Email sent successfully to: ${employee.email}`);
-    } else {
-      console.log('Employee not found for email notification');
-    }
-    
-    res.json(task);
+    }).save().catch(err => console.error('Notification save error:', err.message));
+
+    User.findById(assignedTo).lean().then(employee => {
+      if (employee) {
+        sendTaskAssignmentEmail(employee.email, employee.name, task.title, task.description, task.dueDate)
+          .catch(err => console.error('Background email error (assignTask):', err.message));
+      }
+    }).catch(err => console.error('User lookup error:', err.message));
   } catch (error) {
     console.error('Error in assignTask:', error);
     res.status(500).json({ error: error.message });
@@ -138,14 +140,14 @@ exports.getTaskById = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id)
       .populate('assignedTo createdBy', 'name email');
-    
+
     if (!task) {
       return res.status(404).json({ error: 'Task not found' });
     }
-    
+
     const comments = await Comment.find({ task: task._id }).populate('user', 'name');
     const attachments = await Attachment.find({ task: task._id }).populate('user', 'name');
-    
+
     res.json({ task, comments, attachments });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -177,7 +179,7 @@ exports.getTaskStats = async (req, res) => {
         }
       }
     ]);
-    
+
     res.json({
       total: stats.total[0]?.count || 0,
       pending: stats.pending[0]?.count || 0,
@@ -228,7 +230,7 @@ exports.getEmployeeStats = async (req, res) => {
         }
       }
     ]);
-    
+
     res.json(stats);
   } catch (error) {
     res.status(500).json({ error: error.message });

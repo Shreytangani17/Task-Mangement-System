@@ -21,7 +21,7 @@ const app = express();
 // Compression middleware
 app.use(compression());
 
-// Middleware
+// CORS
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   'http://localhost:5173',
@@ -35,64 +35,76 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.warn('CORS blocked origin:', origin);
       callback(null, true); // Allow all origins for now
     }
   },
   credentials: true,
 }));
 
-// Fix Chrome's Private Network Access policy (blocks public HTTPS → localhost)
+// Fix Chrome's Private Network Access policy
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Private-Network', 'true');
   next();
 });
 
-app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(express.json({ limit: '10mb' }));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+  maxAge: '1d', // Cache uploads for 1 day
+}));
 
-// MongoDB Connection
-let isConnected = false;
+// ─── MongoDB: connect eagerly once at startup ─────────────────────────────────
+let dbConnected = false;
 
 const connectDB = async () => {
-  if (isConnected) return;
-
+  if (dbConnected || mongoose.connection.readyState === 1) {
+    dbConnected = true;
+    return;
+  }
   try {
     await mongoose.connect(process.env.MONGODB_URI, {
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 5000,  // 5s — fail fast instead of 30s freeze
       socketTimeoutMS: 10000,
+      connectTimeoutMS: 5000,
+      heartbeatFrequencyMS: 10000,
       maxPoolSize: 10,
       minPoolSize: 2,
     });
-    isConnected = true;
+    dbConnected = true;
     console.log('✅ MongoDB connected');
   } catch (error) {
     console.error('❌ MongoDB error:', error.message);
+    dbConnected = false;
     throw error;
   }
 };
 
-// Health check
+// Connect immediately when the module loads (important for serverless warm-up)
+connectDB().catch(console.error);
+
+// ─── Routes ───────────────────────────────────────────────────────────────────
+
+// Health / keep-alive endpoint (call this every 5 min to prevent cold starts)
 app.get('/', (req, res) => {
-  res.json({ message: 'Task Management API', status: 'running' });
+  res.json({ message: 'Task Management API', status: 'running', db: dbConnected ? 'connected' : 'disconnected' });
 });
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok' });
+  res.setHeader('Cache-Control', 'no-store');
+  res.json({ status: 'ok', db: dbConnected ? 'connected' : 'disconnected' });
 });
 
-// DB middleware
+// DB guard middleware — only runs if not yet connected (rare race condition safety)
 app.use(async (req, res, next) => {
+  if (dbConnected) return next();
   try {
     await connectDB();
     next();
   } catch (error) {
     console.error('❌ DB middleware error:', error.message);
-    res.status(500).json({ error: 'Database connection failed', detail: error.message });
+    res.status(503).json({ error: 'Database temporarily unavailable. Please retry in a moment.' });
   }
 });
 
-// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/tasks', taskRoutes);

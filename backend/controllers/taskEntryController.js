@@ -22,23 +22,23 @@ exports.getAll = async (req, res) => {
   try {
     const { employee, status, overdue, unassignedOnly } = req.query;
     let query = {};
-    
+
     if (req.user.role === 'employee') {
       query.assignedTo = req.user._id;
     }
-    
+
     if (unassignedOnly === 'true') {
       query.assignedTo = null;
     } else if (employee) {
       query.assignedTo = employee;
     }
-    
+
     if (status) query.status = status;
     if (overdue === 'true') {
       query.dueDate = { $lt: new Date() };
       query.status = { $ne: 'Completed' };
     }
-    
+
     const entries = await TaskEntry.find(query)
       .populate('assignedTo', 'name email')
       .populate('createdBy', 'name email')
@@ -58,18 +58,20 @@ exports.assign = async (req, res) => {
       { assignedTo },
       { new: true }
     ).populate('assignedTo', 'name email');
-    
+
+    // ✅ Respond immediately — don't wait for email
+    res.json(entry);
+
+    // Send email in the background (non-blocking)
     if (entry && entry.assignedTo) {
-      await sendTaskAssignmentEmail(
+      sendTaskAssignmentEmail(
         entry.assignedTo.email,
         entry.assignedTo.name,
         entry.title,
         entry.description || '',
         entry.dueDate
-      );
+      ).catch(err => console.error('Background email error (assign):', err.message));
     }
-    
-    res.json(entry);
   } catch (error) {
     console.error('Assignment error:', error);
     res.status(500).json({ error: error.message });
@@ -90,7 +92,7 @@ exports.getStats = async (req, res) => {
     const { employee } = req.query;
     let query = {};
     if (employee) query.assignedTo = employee;
-    
+
     const [stats] = await TaskEntry.aggregate([
       { $match: query },
       {
@@ -103,7 +105,7 @@ exports.getStats = async (req, res) => {
         }
       }
     ]);
-    
+
     res.json({
       total: stats.total[0]?.count || 0,
       pending: stats.pending[0]?.count || 0,
