@@ -10,10 +10,10 @@ const EmployeeDashboard = () => {
   const [stats, setStats] = useState({ total: 0, pending: 0, inProgress: 0, completed: 0, overdue: 0 });
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchTasks();
-    fetchNotifications();
+    Promise.all([fetchTasks(), fetchNotifications()]).finally(() => setLoading(false));
   }, []);
 
   const fetchNotifications = async () => {
@@ -52,6 +52,8 @@ const EmployeeDashboard = () => {
       console.error('Error fetching tasks:', error);
     }
   };
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-black">

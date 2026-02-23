@@ -49,7 +49,8 @@ exports.getAllTasks = async (req, res) => {
   try {
     const tasks = await Task.find()
       .populate('assignedTo createdBy', 'name email')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
     res.json(tasks);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -60,7 +61,8 @@ exports.getMyTasks = async (req, res) => {
   try {
     const tasks = await Task.find({ assignedTo: req.user._id })
       .populate('assignedTo createdBy', 'name email')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
     res.json(tasks);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -161,17 +163,28 @@ exports.deleteTask = async (req, res) => {
 
 exports.getTaskStats = async (req, res) => {
   try {
-    const total = await Task.countDocuments();
-    const pending = await Task.countDocuments({ status: 'Pending' });
-    const inProgress = await Task.countDocuments({ status: 'In-Progress' });
-    const completed = await Task.countDocuments({ status: 'Completed' });
-    const overdue = await Task.countDocuments({ 
-      status: { $ne: 'Completed' },
-      dueDate: { $lt: new Date() }
-    });
+    const [stats] = await Task.aggregate([
+      {
+        $facet: {
+          total: [{ $count: 'count' }],
+          pending: [{ $match: { status: 'Pending' } }, { $count: 'count' }],
+          inProgress: [{ $match: { status: 'In-Progress' } }, { $count: 'count' }],
+          completed: [{ $match: { status: 'Completed' } }, { $count: 'count' }],
+          overdue: [
+            { $match: { status: { $ne: 'Completed' }, dueDate: { $lt: new Date() } } },
+            { $count: 'count' }
+          ]
+        }
+      }
+    ]);
     
-    console.log('Task Stats:', { total, pending, inProgress, completed, overdue });
-    res.json({ total, pending, inProgress, completed, overdue });
+    res.json({
+      total: stats.total[0]?.count || 0,
+      pending: stats.pending[0]?.count || 0,
+      inProgress: stats.inProgress[0]?.count || 0,
+      completed: stats.completed[0]?.count || 0,
+      overdue: stats.overdue[0]?.count || 0
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

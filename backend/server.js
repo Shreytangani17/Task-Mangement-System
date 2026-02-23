@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const compression = require('compression');
 const path = require('path');
 
 const authRoutes = require('./routes/auth');
@@ -16,6 +17,9 @@ const noteRoutes = require('./routes/notes');
 const employeeMasterRoutes = require('./routes/employeeMaster');
 
 const app = express();
+
+// Compression middleware
+app.use(compression());
 
 // Middleware
 const allowedOrigins = [
@@ -55,8 +59,10 @@ const connectDB = async () => {
 
   try {
     await mongoose.connect(process.env.MONGODB_URI, {
-      serverSelectionTimeoutMS: 30000,
-      socketTimeoutMS: 45000,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 10000,
+      maxPoolSize: 10,
+      minPoolSize: 2,
     });
     isConnected = true;
     console.log('✅ MongoDB connected');

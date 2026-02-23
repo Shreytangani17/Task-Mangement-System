@@ -5,7 +5,8 @@ exports.getNotifications = async (req, res) => {
     const notifications = await Notification.find({ user: req.user._id })
       .populate('task', 'title')
       .sort({ createdAt: -1 })
-      .limit(50);
+      .limit(50)
+      .lean();
     res.json(notifications);
   } catch (error) {
     res.status(500).json({ error: error.message });

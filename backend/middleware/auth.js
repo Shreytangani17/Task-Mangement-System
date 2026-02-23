@@ -7,7 +7,7 @@ exports.auth = async (req, res, next) => {
     if (!token) throw new Error();
     
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
+    const user = await User.findById(decoded.id).lean();
     
     if (!user) throw new Error();
     

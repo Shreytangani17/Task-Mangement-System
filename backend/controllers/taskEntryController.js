@@ -42,7 +42,8 @@ exports.getAll = async (req, res) => {
     const entries = await TaskEntry.find(query)
       .populate('assignedTo', 'name email')
       .populate('createdBy', 'name email')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
     res.json(entries);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -90,13 +91,26 @@ exports.getStats = async (req, res) => {
     let query = {};
     if (employee) query.assignedTo = employee;
     
-    const total = await TaskEntry.countDocuments(query);
-    const pending = await TaskEntry.countDocuments({ ...query, status: 'Pending' });
-    const inProgress = await TaskEntry.countDocuments({ ...query, status: 'In Progress' });
-    const completed = await TaskEntry.countDocuments({ ...query, status: 'Completed' });
-    const unassigned = await TaskEntry.countDocuments({ ...query, assignedTo: null });
+    const [stats] = await TaskEntry.aggregate([
+      { $match: query },
+      {
+        $facet: {
+          total: [{ $count: 'count' }],
+          pending: [{ $match: { status: 'Pending' } }, { $count: 'count' }],
+          inProgress: [{ $match: { status: 'In Progress' } }, { $count: 'count' }],
+          completed: [{ $match: { status: 'Completed' } }, { $count: 'count' }],
+          unassigned: [{ $match: { assignedTo: null } }, { $count: 'count' }]
+        }
+      }
+    ]);
     
-    res.json({ total, pending, inProgress, completed, unassigned });
+    res.json({
+      total: stats.total[0]?.count || 0,
+      pending: stats.pending[0]?.count || 0,
+      inProgress: stats.inProgress[0]?.count || 0,
+      completed: stats.completed[0]?.count || 0,
+      unassigned: stats.unassigned[0]?.count || 0
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

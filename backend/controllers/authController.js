@@ -6,12 +6,12 @@ exports.signup = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
     
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email }).lean();
     if (existingUser) {
       return res.status(400).json({ error: 'Email already exists' });
     }
     
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 8);
     const user = new User({ name, email, password: hashedPassword, role: role || 'employee' });
     await user.save();
     
@@ -28,21 +28,18 @@ exports.signup = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    console.log('Login attempt:', req.body.email);
     const { email, password } = req.body;
     
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required' });
     }
     
-    const user = await User.findOne({ email });
-    console.log('User found:', !!user);
+    const user = await User.findOne({ email }).select('+password').lean();
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log('Password match:', isMatch);
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
@@ -54,7 +51,6 @@ exports.login = async (req, res) => {
       token 
     });
   } catch (error) {
-    console.error('Login error:', error);
     res.status(500).json({ error: error.message || 'Login failed' });
   }
 };

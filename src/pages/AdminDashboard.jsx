@@ -8,14 +8,14 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
   const [employees, setEmployees] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchStats();
-    fetchEmployees();
+    Promise.all([fetchStats(), fetchEmployees()]).finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
-    fetchStats();
+    if (!loading) fetchStats();
   }, [selectedEmployee]);
 
   const fetchStats = async () => {
@@ -43,6 +43,8 @@ const AdminDashboard = () => {
     { name: 'Completed', value: stats.completed, fill: '#06b6d4' },
     { name: 'Unassigned', value: stats.unassigned, fill: '#f43f5e' }
   ] : [];
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
 
   return (
     <div className="flex min-h-screen bg-white dark:bg-black">
