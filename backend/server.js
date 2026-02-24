@@ -52,50 +52,64 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
   maxAge: '1d', // Cache uploads for 1 day
 }));
 
-// ─── MongoDB: connect eagerly once at startup ─────────────────────────────────
-let dbConnected = false;
+// ─── MongoDB: persistent connection across Vercel serverless invocations ──────
+// Uses global to reuse the connection even when the module is re-evaluated.
+// This is the official Vercel + Mongoose recommended pattern.
+if (!global._mongooseConnection) {
+  global._mongooseConnection = { conn: null, promise: null };
+}
+const cached = global._mongooseConnection;
 
 const connectDB = async () => {
-  if (dbConnected || mongoose.connection.readyState === 1) {
-    dbConnected = true;
-    return;
+  // Already connected — return immediately (fastest path)
+  if (cached.conn && mongoose.connection.readyState === 1) {
+    return cached.conn;
   }
-  try {
-    await mongoose.connect(process.env.MONGODB_URI, {
-      serverSelectionTimeoutMS: 5000,  // 5s — fail fast instead of 30s freeze
-      socketTimeoutMS: 10000,
-      connectTimeoutMS: 5000,
-      heartbeatFrequencyMS: 10000,
-      maxPoolSize: 10,
-      minPoolSize: 2,
-    });
-    dbConnected = true;
+  // Connection in-flight — await the existing promise (avoids double connect)
+  if (cached.promise) {
+    cached.conn = await cached.promise;
+    return cached.conn;
+  }
+  mongoose.set('bufferCommands', false); // fail fast — don't queue ops during connect
+  cached.promise = mongoose.connect(process.env.MONGODB_URI, {
+    serverSelectionTimeoutMS: 4000, // 4s max wait to pick a server
+    socketTimeoutMS: 8000,
+    connectTimeoutMS: 4000,
+    heartbeatFrequencyMS: 10000,
+    maxPoolSize: 10,
+    minPoolSize: 2,
+  }).then((m) => {
     console.log('✅ MongoDB connected');
-  } catch (error) {
-    console.error('❌ MongoDB error:', error.message);
-    dbConnected = false;
-    throw error;
-  }
+    return m;
+  }).catch((err) => {
+    cached.promise = null; // Reset so next request retries
+    console.error('❌ MongoDB error:', err.message);
+    throw err;
+  });
+  cached.conn = await cached.promise;
+  return cached.conn;
 };
 
-// Connect immediately when the module loads (important for serverless warm-up)
+// Connect immediately when the module loads
 connectDB().catch(console.error);
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 
 // Health / keep-alive endpoint (call this every 5 min to prevent cold starts)
 app.get('/', (req, res) => {
-  res.json({ message: 'Task Management API', status: 'running', db: dbConnected ? 'connected' : 'disconnected' });
+  const isConnected = mongoose.connection.readyState === 1;
+  res.json({ message: 'Task Management API', status: 'running', db: isConnected ? 'connected' : 'disconnected' });
 });
 
 app.get('/api/health', (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
-  res.json({ status: 'ok', db: dbConnected ? 'connected' : 'disconnected' });
+  const isConnected = mongoose.connection.readyState === 1;
+  res.json({ status: 'ok', db: isConnected ? 'connected' : 'disconnected' });
 });
 
-// DB guard middleware — only runs if not yet connected (rare race condition safety)
+// DB guard middleware — runs connectDB if not yet connected (serverless safety)
 app.use(async (req, res, next) => {
-  if (dbConnected) return next();
+  if (mongoose.connection.readyState === 1) return next();
   try {
     await connectDB();
     next();

@@ -1,7 +1,8 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { User, Lock, ArrowRight, Loader } from 'lucide-react';
+import { warmupServer } from '../utils/api';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -10,6 +11,12 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  // Pre-warm the backend as soon as the login page is visible.
+  // By the time the user types and hits Sign In, the server is already awake.
+  useEffect(() => {
+    warmupServer();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
