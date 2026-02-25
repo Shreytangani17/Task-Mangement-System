@@ -8,7 +8,14 @@ exports.create = async (req, res) => {
   try {
     taskCounter++;
     const taskId = `T${String(taskCounter).padStart(4, '0')}`;
-    const taskEntry = new TaskEntry({ ...req.body, taskId, createdBy: req.user._id });
+    const { dueDate, dueTime, ...rest } = req.body;
+    const taskEntry = new TaskEntry({
+      ...rest,
+      taskId,
+      createdBy: req.user._id,
+      dueDate: dueDate || null,
+      dueTime: dueTime || null,
+    });
     const saved = await taskEntry.save();
     const populated = await TaskEntry.findById(saved._id).populate('assignedTo', 'name email');
     res.status(201).json(populated);
@@ -74,6 +81,33 @@ exports.assign = async (req, res) => {
     }
   } catch (error) {
     console.error('Assignment error:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.update = async (req, res) => {
+  try {
+    const { title, description, priority, status, dueDate, dueTime } = req.body;
+
+    // Sanitize: convert empty string to null so Mongoose doesn't throw CastError on Date field
+    const updateData = {
+      title,
+      description,
+      priority,
+      status,
+      dueDate: dueDate || null,
+      dueTime: dueTime || null,
+    };
+
+    const entry = await TaskEntry.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true, runValidators: true }
+    ).populate('assignedTo', 'name email');
+    if (!entry) return res.status(404).json({ error: 'Task not found' });
+    res.json(entry);
+  } catch (error) {
+    console.error('TaskEntry update error:', error);
     res.status(500).json({ error: error.message });
   }
 };
